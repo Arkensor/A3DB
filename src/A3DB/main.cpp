@@ -15,7 +15,7 @@ Extension *instance;
 #ifdef __GNUC__
 
 	//For linux use GCC compiler syntax to for lib attach and detach
-	static void __attribute__((constructor)) extension_init(void) {instance = new Extension("A3DB", "0.9c");}
+	static void __attribute__((constructor)) extension_init(void) {instance = new Extension("A3DB", "0.9_doggo_dev");}
 	static void __attribute__((destructor))	extension_destroy(void)	{delete instance;}
 
 	extern "C"
@@ -29,8 +29,7 @@ Extension *instance;
 	}
 
 	int RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argCnt) {
-		instace->addRequest(output, outputSize, function, args, argCnt);
-		return instance->checkResults(output, outputSize);
+		return instance->call(output, outputSize, function, args, argsCnt);
 	}
 
 #elif _MSC_VER
@@ -42,7 +41,7 @@ Extension *instance;
 		switch (ul_reason_for_call)
 		{
 			case DLL_PROCESS_ATTACH:
-				instance = new Extension("A3DB", "0.9c");
+				instance = new Extension("A3DB", "0.9_doggo_dev");
 			break;
 
 			case DLL_PROCESS_DETACH:
@@ -62,8 +61,7 @@ Extension *instance;
 	}
 
 	int __stdcall RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argsCnt) {
-		instance->addRequest(function, args, argsCnt);
-		return instance->checkResults(output, outputSize);
+		return instance->call(output, outputSize, function, args, argsCnt);
 	}
 
 #endif

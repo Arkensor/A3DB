@@ -10,6 +10,11 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+
+#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+	#include "spdlog/spdlog.h"
+#endif
 
 #include "safeQueue.h"
 #include "Workload.h"
@@ -20,23 +25,32 @@ public:
 	std::string Version;
 
 	//Constructor
-	Extension(std::string n, std::string v);
+	Extension(std::string _name, std::string _version);
 	~Extension();
 
 	//Public functions for extension class interaction
-	void addRequest(const char *function, const char **args, int argCnt);
-	int  checkResults(char *output, int outputSize);
+
+	int call(char *output, int outputSize, const char *function, const char **args, int argsCnt);
 
 private:
-	//Console Interaction
-	void print(std::string message);
+
+	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+		std::shared_ptr<spdlog::logger> console;
+	#endif
+
+	//Block all requets if there was an error in the extension
+	bool allGood = true;
 
 	// Request Mangement
 	bool workerActive = false;
 	bool shutDown = false;
 	SafeQueue<Workload> queue;
+
 	void setup();
 	void worker();
+
+	void addRequest(const char *function, const char **args, int argCnt);
+	int  checkResults(char *output, int outputSize);
 
 	//void MySQLquery(std::string WorkloadCategory, std::vector<std::string> WorkloadData);
 };

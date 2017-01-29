@@ -8,26 +8,22 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-#ifdef _WINDOWS
-	#include <Windows.h> //Windows specific for console
-	#include <iostream>  //For console output
-#endif
-
 #include "Extension.h"
 #include "mysql.h"
 
-Extension::Extension(std::string n, std::string v) {
-	Name = n;
-	Version = v;
+Extension::Extension(std::string _name, std::string _version) {
+	Name = _name;
+	Version = _version;
 
-	#ifdef _WINDOWS
-		#ifdef EXTENSION_DEBUG_OUTPUT
-			AllocConsole();
-			SetConsoleTitle(TEXT("Console output"));
-			FILE *stream;
-			freopen_s(&stream, "CONOUT$", "w", stdout);
-			print(Name + " version " + Version + " has been loaded successfully\n");
-		#endif
+	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+		AllocConsole();
+		SetConsoleTitle(TEXT("Console output"));
+		FILE *stream;
+		freopen_s(&stream, "CONOUT$", "w", stdout);
+
+		auto console_temp = spdlog::stdout_logger_mt("Console");
+		console.swap(console_temp);
+		console->info("{0} version {1} initialized ...", Name, Version);
 	#endif
 }
 
@@ -35,56 +31,71 @@ Extension::~Extension(){
 
 	//Close down all connections
 	//Send shutting down ... to logfile
-	//Closing console write stream
 
 	shutDown = true;
 
-	this->print(Name + " shutting down ...");
-}
-
-void Extension::print(std::string message) {
-	#ifdef _WINDOWS
-		#ifdef EXTENSION_DEBUG_OUTPUT
-			std::cout << message;
-		#endif
+	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+		console->info("{0} shutting down ...", Name);
 	#endif
 }
 
 void Extension::setup(){
 
-	if (workerActive) 
+	if (workerActive){
 		return;
-
+	}
+	
 	//Setup the workers - currently one of them
 	std::thread workerthread(&Extension::worker, this);
 	workerthread.detach();
-
 	workerActive = true;
 
-	this->print("Worker threads have been loaded . . .\n");
+	//Everything should be good now
+	allGood = true;
+
+	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+		console->info("Worker threads have been loaded . . .");
+	#endif
 }
 
 void Extension::worker() {
 	while (!shutDown){
 		Workload currentWorkload = queue.dequeue();
 
-		//Debug notice
-		this->print("\n=== New Workload is beeing worked on ===\n");
-		this->print("Category: "+currentWorkload.WorkloadCategory+"\n");
-		for (unsigned int i = 0; i < currentWorkload.WorkloadData.size(); i++){
-			this->print("Arguement[" + std::to_string(i) + "]: " + currentWorkload.WorkloadData[i] + "\n");
-		}
-		this->print("\n");
+		#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+			//Debug notice
+			console->info("\n=== New Workload is beeing worked on ===");
+			console->info("Category: " + currentWorkload.WorkloadCategory);
+			for (unsigned int i = 0; i < currentWorkload.WorkloadData.size(); i++){
+				console->info("Arguement[{0}]: {1}", i, currentWorkload.WorkloadData[i]);
+			}
+		#endif
+	}
+}
 
+int Extension::call(char *output, int outputSize, const char *function, const char **args, int argsCnt){
+
+	if (!allGood){
+		strcpy_s(output, outputSize, "There was an error when loading the extension please see logfiles for more information ...");
+		return 500;
+	}
+
+	if (!workerActive){
+		this->setup();
+		if (!workerActive){allGood = false;}
+	}
+
+	if (strcmp(function, "version")){
+		strcpy_s(output, outputSize, Version.c_str());
+		return 1;
+	}
+	else {
+		this->addRequest(function, args, argsCnt);
+		return this->checkResults(output, outputSize);
 	}
 }
 
 void Extension::addRequest(const char *function, const char **args, int argCnt) {
-		
-	if (!workerActive){
-		this->setup();
-	}
-
 	queue.enqueue(Workload(function, args, argCnt));
 }
 
