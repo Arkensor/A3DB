@@ -27,3 +27,15 @@
 *.exe
 *.out
 *.app
+
+src/A3DB\.opensdf
+
+src/A3DB\.sdf
+
+src/Release/
+
+src/Debug/
+
+src/A3DB/Release/
+
+src/A3DB/Debug/
