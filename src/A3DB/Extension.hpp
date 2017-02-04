@@ -7,6 +7,8 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
+#ifndef __EXTENSION_H_
+#define __EXTENSION_H_
 
 #include <string>
 #include <vector>
@@ -18,11 +20,17 @@
 
 #include "SafeQueue.hpp"
 #include "Workload.hpp"
+#include "Processor.hpp"
+#include "Result.hpp"
 
 class Extension {
 public:
 	std::string Name;
 	std::string Version;
+
+	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+	std::shared_ptr<spdlog::logger> console;
+	#endif
 
 	//Constructor
 	Extension(std::string _name, std::string _version);
@@ -34,9 +42,9 @@ public:
 
 private:
 
-	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-		std::shared_ptr<spdlog::logger> console;
-	#endif
+	Processor<Workload, Result> *processor;
+
+	int ticketID = 0;
 
 	//Block all requets if there was an error in the extension
 	bool allGood = true;
@@ -47,10 +55,12 @@ private:
 	SafeQueue<Workload> queue;
 
 	void setup();
-	void worker();
 
-	void addRequest(const char *function, const char **args, int argCnt);
-	int  checkResults(char *output, int outputSize);
+	std::vector<int> addRequest(const char *function, const char **args, int argCnt);
+	int checkResults(char *output, int outputSize);
+	void createConsole();
+	std::vector<Result> process(Workload request);
 
 	//void MySQLquery(std::string WorkloadCategory, std::vector<std::string> WorkloadData);
 };
+#endif

@@ -9,8 +9,8 @@
 	third party notice: Sebastian Ax
 */
 
-#ifndef SAFE_QUEUE
-#define SAFE_QUEUE
+#ifndef __SAFE_QUEUE_H_
+#define __SAFE_QUEUE_H_
 
 #include <queue>
 #include <mutex>
@@ -47,6 +47,24 @@ public:
 		T val = q.front();
 		q.pop();
 		return val;
+	}
+
+	bool try_pop_result(T& r)
+	{
+		std::lock_guard<std::mutex> lock(m);
+		if (!q.empty())
+		{
+			r = q.front();
+			q.pop();
+			return true;
+		}
+		return false;
+	}
+
+	size_t size()
+	{
+		std::lock_guard<std::mutex> lock(m);
+		return q.size();
 	}
 
 private:

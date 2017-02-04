@@ -8,12 +8,18 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
+#ifndef __RESULT_H_
+#define __RESULT_H_
+
 #include <string>
 #include <vector>
 
 class Result {
 public:
-	std::string UniqueID;
-	std::vector<std::vector<std::string>> ResultData;
-	Result(std::string uid, std::vector<std::vector<std::string>> result);
+	int UniqueID;
+	std::string ResultData;
+	bool IsMultiPart = false;
+	int PartIndex;
+	Result(int uid, std::string result, bool multipart = false, int index = 0);
 };
+#endif

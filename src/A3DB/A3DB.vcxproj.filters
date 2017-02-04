@@ -35,10 +35,13 @@
     <ClInclude Include="Result.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Workload.hpp">
+    <ClInclude Include="SafeQueue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SafeQueue.hpp">
+    <ClInclude Include="Processor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Workload.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

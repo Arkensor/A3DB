@@ -10,11 +10,10 @@
 
 #include "Workload.hpp"
 
-Workload::Workload(const char *function, const char **args, int argCnt){
-	WorkloadCategory = function;
-	for (int i = 0; i < argCnt; i++) {
-		WorkloadData.push_back(std::string(args[i]));
-	}
+Workload::Workload(int _id, const char *category, const char *request) {
+	id = _id;
+	WorkloadCategory = category;
+	WorkloadData = std::string(request);
 }
 
 //Todo das geht nicht so recht

@@ -8,22 +8,16 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
+#include "mariadb\mysql.h"
 #include "Extension.hpp"
-#include "mysql.h"
+
 
 Extension::Extension(std::string _name, std::string _version) {
 	Name = _name;
 	Version = _version;
 
 	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-		AllocConsole();
-		SetConsoleTitle(TEXT("Console output"));
-		FILE *stream;
-		freopen_s(&stream, "CONOUT$", "w", stdout);
-
-		auto console_temp = spdlog::stdout_logger_mt("Console");
-		console.swap(console_temp);
-		console->info("{0} version {1} initialized ...", Name, Version);
+	createConsole();
 	#endif
 }
 
@@ -39,15 +33,26 @@ Extension::~Extension(){
 	#endif
 }
 
-void Extension::setup(){
+void Extension::createConsole() {
 
-	if (workerActive){
-		return;
-	}
+	AllocConsole();
+	SetConsoleTitle(TEXT("Console output"));
+	FILE *stream;
+	freopen_s(&stream, "CONOUT$", "w", stdout);
+
+	auto console_temp = spdlog::stdout_logger_mt("Console");
+	console.swap(console_temp);
+	console->info("{0} version {1} initialized ...", Name, Version);
+
+}
+
+void Extension::setup() {
+
+	if (workerActive) return;
 	
-	//Setup the workers - currently one of them
-	std::thread workerthread(&Extension::worker, this);
-	workerthread.detach();
+	processor = new Processor<Workload, Result>(this);
+	processor->start(std::bind(&Extension::process, this, std::placeholders::_1), -1);
+
 	workerActive = true;
 
 	//Everything should be good now
@@ -58,51 +63,61 @@ void Extension::setup(){
 	#endif
 }
 
-void Extension::worker() {
-	while (!shutDown){
-		Workload currentWorkload = queue.dequeue();
+std::vector<Result> Extension::process(Workload request)
+{
+	std::vector<Result> results;
 
-		#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-			//Debug notice
-			console->info("\n=== New Workload is beeing worked on ===");
-			console->info("Category: " + currentWorkload.WorkloadCategory);
-			for (unsigned int i = 0; i < currentWorkload.WorkloadData.size(); i++){
-				console->info("Arguement[{0}]: {1}", i, currentWorkload.WorkloadData[i]);
-			}
-		#endif
-	}
+	//TODO
+	//process request query
+	//check length of return
+	//if > max size, split into multiple results, mark result as multi-part, supply index
+
+	return results;
 }
 
 int Extension::call(char *output, int outputSize, const char *function, const char **args, int argsCnt){
 
-	if (!allGood){
+	if (!allGood) {
 		strcpy_s(output, outputSize, "There was an error when loading the extension please see logfiles for more information ...");
 		return 500;
 	}
 
-	if (!workerActive){
+	if (!workerActive) {
 		this->setup();
 		if (!workerActive){allGood = false;}
 	}
 
-	if (strcmp(function, "version")){
+	if (strcmp(function, "version")) {
 		strcpy_s(output, outputSize, Version.c_str());
 		return 1;
-	}
-	else {
-		this->addRequest(function, args, argsCnt);
-		return this->checkResults(output, outputSize);
+	} else {
+		auto addedIDs = this->addRequest(function, args, argsCnt);
+		//add IDs to ret, and check for new results
+		auto results = this->checkResults(output, outputSize);
 	}
 }
 
-void Extension::addRequest(const char *function, const char **args, int argCnt) {
-	queue.enqueue(Workload(function, args, argCnt));
+std::vector<int> Extension::addRequest(const char *function, const char **args, int argCnt) {
+	std::vector<int> ids;
+	for (int i = 0; i < argCnt; i++) {
+		int id = ++ticketID;
+		ids.push_back(id);
+		auto req = Workload(id, function, args[i]);
+		processor->add(req);
+	}
+	return ids;
 }
 
 int Extension::checkResults(char *output, int outputSize) {
+
+	//processor->try_get_result
+	//Keep trying to get results, while checking return size < max size
+	//TODO
 	strcpy_s(output, outputSize, "There were not ready results. Greetings Doggo");
 	return 404;
 }
+
+
 
 /*
 	void Extension::MySQLquery(std::string WorkloadCategory, std::vector<std::string> WorkloadData){
@@ -155,3 +170,5 @@ int Extension::checkResults(char *output, int outputSize) {
 	mysql_close(connection);
 	}
 */
+
+
