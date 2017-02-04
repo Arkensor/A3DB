@@ -8,7 +8,7 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-#include "Result.h"
+#include "Result.hpp"
 
 Result::Result(std::string uid, std::vector<std::vector<std::string>> result){
 	UniqueID = uid;

@@ -28,6 +28,10 @@
 *.out
 *.app
 
+# VS cache files
+*.VC.db
+*.VC.VC.opendb
+
 src/A3DB\.opensdf
 
 src/A3DB\.sdf

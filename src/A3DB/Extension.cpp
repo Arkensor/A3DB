@@ -8,7 +8,7 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-#include "Extension.h"
+#include "Extension.hpp"
 #include "mysql.h"
 
 Extension::Extension(std::string _name, std::string _version) {

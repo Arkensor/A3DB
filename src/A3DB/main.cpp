@@ -8,7 +8,7 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-#include "Extension.h"
+#include "Extension.hpp"
 
 Extension *instance;
 

@@ -16,8 +16,8 @@
 	#include "spdlog/spdlog.h"
 #endif
 
-#include "safeQueue.h"
-#include "Workload.h"
+#include "SafeQueue.hpp"
+#include "Workload.hpp"
 
 class Extension {
 public:
