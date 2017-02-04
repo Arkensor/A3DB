@@ -40,8 +40,8 @@ void Extension::createConsole() {
 	FILE *stream;
 	freopen_s(&stream, "CONOUT$", "w", stdout);
 
-	auto console_temp = spdlog::stdout_logger_mt("Console");
-	console.swap(console_temp);
+	auto console_logger = spdlog::stdout_logger_mt("Console");
+	console.swap(console_logger);
 	console->info("{0} version {1} initialized ...", Name, Version);
 
 }
