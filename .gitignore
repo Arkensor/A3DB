@@ -1,3 +1,9 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
 # Compiled Object files
 *.slo
 *.lo
@@ -27,6 +33,10 @@
 *.exe
 *.out
 *.app
+
+# VS cache files
+*.VC.db
+*.VC.VC.opendb
 
 src/A3DB\.opensdf
 

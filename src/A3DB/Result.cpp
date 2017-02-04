@@ -8,9 +8,11 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-#include "Result.h"
+#include "Result.hpp"
 
-Result::Result(std::string uid, std::vector<std::vector<std::string>> result){
+Result::Result(int uid, std::string result, bool multipart = false, int index = 0) {
 	UniqueID = uid;
 	ResultData = result;
+	IsMultiPart = multipart;
+	PartIndex = index;
 }

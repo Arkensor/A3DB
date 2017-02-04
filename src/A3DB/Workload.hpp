@@ -7,6 +7,8 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
+#ifndef __WORKLOAD_H_
+#define __WORKLOAD_H_
 
 #include <string>
 #include <vector>
@@ -14,12 +16,14 @@
 class Workload {
 public:
 	//Attributes
+	int id;
 	std::string WorkloadCategory;
-	std::vector<std::string> WorkloadData;
+	std::string WorkloadData;
 
 	//Constructor, no destructor overload needed here
-	Workload(const char *function, const char **args, int argCnt);
+	Workload(int _id, const char *category, const char *request);
 
 	//Utils
 	std::string Trim(std::string s);
 };
+#endif
