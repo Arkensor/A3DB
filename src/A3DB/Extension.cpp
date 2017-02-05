@@ -10,7 +10,7 @@
 
 #include "mariadb\mysql.h"
 #include "Extension.hpp"
-
+#include "Processor.hpp"
 
 Extension::Extension(std::string _name, std::string _version) {
 	Name = _name;
@@ -34,7 +34,7 @@ Extension::~Extension(){
 }
 
 void Extension::createConsole() {
-
+#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
 	AllocConsole();
 	SetConsoleTitle(TEXT("Console output"));
 	FILE *stream;
@@ -43,7 +43,7 @@ void Extension::createConsole() {
 	auto console_logger = spdlog::stdout_logger_mt("Console");
 	console.swap(console_logger);
 	console->info("{0} version {1} initialized ...", Name, Version);
-
+#endif
 }
 
 void Extension::setup() {
@@ -57,10 +57,6 @@ void Extension::setup() {
 
 	//Everything should be good now
 	allGood = true;
-
-	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-		console->info("Worker threads have been loaded . . .");
-	#endif
 }
 
 std::vector<Result> Extension::process(Workload request)
@@ -75,10 +71,10 @@ std::vector<Result> Extension::process(Workload request)
 	return results;
 }
 
-int Extension::call(char *output, int outputSize, const char *function, const char **args, int argsCnt){
+int Extension::call(char *output, int outputSize, const char *function, const char **args, int argsCnt) {
 
 	if (!allGood) {
-		strcpy_s(output, outputSize, "There was an error when loading the extension please see logfiles for more information ...");
+		strcpy_s(output, outputSize - 1, "There was an error when loading the extension please see logfiles for more information ...");
 		return 500;
 	}
 
@@ -87,14 +83,15 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		if (!workerActive){allGood = false;}
 	}
 
-	if (strcmp(function, "version")) {
-		strcpy_s(output, outputSize, Version.c_str());
+	if (!strcmp(function, "version")) {
+		strcpy_s(output, outputSize - 1, Version.c_str());
 		return 1;
 	} else {
 		auto addedIDs = this->addRequest(function, args, argsCnt);
 		//add IDs to ret, and check for new results
 		auto results = this->checkResults(output, outputSize);
 	}
+	return 0;
 }
 
 std::vector<int> Extension::addRequest(const char *function, const char **args, int argCnt) {
@@ -113,11 +110,9 @@ int Extension::checkResults(char *output, int outputSize) {
 	//processor->try_get_result
 	//Keep trying to get results, while checking return size < max size
 	//TODO
-	strcpy_s(output, outputSize, "There were not ready results. Greetings Doggo");
+	strcpy_s(output, outputSize - 1, "There were not ready results. Greetings Doggo");
 	return 404;
 }
-
-
 
 /*
 	void Extension::MySQLquery(std::string WorkloadCategory, std::vector<std::string> WorkloadData){

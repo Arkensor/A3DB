@@ -4,8 +4,7 @@
 #define __PROCESSOR_H_
 
 #include "SafeQueue.hpp"
-
-class Extension;
+#include "Extension.hpp"
 
 template <class T, class U>
 class Processor

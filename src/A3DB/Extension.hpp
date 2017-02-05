@@ -18,10 +18,11 @@
 	#include "spdlog/spdlog.h"
 #endif
 
-#include "SafeQueue.hpp"
 #include "Workload.hpp"
-#include "Processor.hpp"
 #include "Result.hpp"
+
+template<class T, class U>
+class Processor;
 
 class Extension {
 public:
@@ -52,7 +53,6 @@ private:
 	// Request Mangement
 	bool workerActive = false;
 	bool shutDown = false;
-	SafeQueue<Workload> queue;
 
 	void setup();
 

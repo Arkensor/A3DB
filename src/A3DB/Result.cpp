@@ -10,7 +10,7 @@
 
 #include "Result.hpp"
 
-Result::Result(int uid, std::string result, bool multipart = false, int index = 0) {
+Result::Result(int uid, std::string result, bool multipart, int index) {
 	UniqueID = uid;
 	ResultData = result;
 	IsMultiPart = multipart;
