@@ -14,6 +14,11 @@
 #include <vector>
 #include <memory>
 
+#ifdef _WINDOWS
+	#include <Windows.h>
+#endif
+
+
 #ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
 	#include "spdlog/spdlog.h"
 #endif
@@ -58,7 +63,6 @@ private:
 
 	std::vector<int> addRequest(const char *function, const char **args, int argCnt);
 	int checkResults(char *output, int outputSize);
-	void createConsole();
 	std::vector<Result> process(Workload request);
 
 	//void MySQLquery(std::string WorkloadCategory, std::vector<std::string> WorkloadData);

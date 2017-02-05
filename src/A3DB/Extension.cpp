@@ -8,7 +8,7 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-#include "mariadb\mysql.h"
+//#include "mariadb\mysql.h"
 #include "Extension.hpp"
 #include "Processor.hpp"
 
@@ -17,7 +17,14 @@ Extension::Extension(std::string _name, std::string _version) {
 	Version = _version;
 
 	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-	createConsole();
+		AllocConsole();
+		SetConsoleTitle(TEXT("Console output"));
+		FILE *stream;
+		freopen_s(&stream, "CONOUT$", "w", stdout);
+
+		auto console_logger = spdlog::stdout_logger_mt("Console");
+		console.swap(console_logger);
+		console->info("{0} version {1} initialized ...", Name, Version);
 	#endif
 }
 
@@ -31,19 +38,6 @@ Extension::~Extension(){
 	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
 		console->info("{0} shutting down ...", Name);
 	#endif
-}
-
-void Extension::createConsole() {
-#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-	AllocConsole();
-	SetConsoleTitle(TEXT("Console output"));
-	FILE *stream;
-	freopen_s(&stream, "CONOUT$", "w", stdout);
-
-	auto console_logger = spdlog::stdout_logger_mt("Console");
-	console.swap(console_logger);
-	console->info("{0} version {1} initialized ...", Name, Version);
-#endif
 }
 
 void Extension::setup() {
@@ -165,5 +159,3 @@ int Extension::checkResults(char *output, int outputSize) {
 	mysql_close(connection);
 	}
 */
-
-
