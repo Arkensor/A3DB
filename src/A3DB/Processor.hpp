@@ -22,10 +22,8 @@ public:
 		if (c == -1 || c > (int)expected)
 			c = expected;
 
-		#ifdef _DEBUG
-		#ifdef _WINDOWS
+		#ifdef CONSOLE_DEBUG
 			ext->console->info("Loading worker threads..");
-		#endif
 		#endif
 
 		for (int i = 0; i < c; i++)
@@ -36,10 +34,8 @@ public:
 
 		started = true;
 
-		#ifdef _DEBUG
-		#ifdef _WINDOWS
+		#ifdef CONSOLE_DEBUG
 			ext->console->info("Worker threads loaded!");
-		#endif
 		#endif
 	}
 

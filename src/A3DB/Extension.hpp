@@ -16,12 +16,10 @@
 
 #ifdef _WINDOWS
 	#include <Windows.h>
-#endif
-
-#ifdef _DEBUG
-#ifdef _WINDOWS
-	#include "spdlog/spdlog.h"
-#endif
+	#ifdef _DEBUG
+		#define CONSOLE_DEBUG
+		#include "spdlog/spdlog.h"
+	#endif
 #endif
 
 #include "Workload.hpp"
@@ -35,10 +33,8 @@ public:
 	std::string Name;
 	std::string Version;
 
-	#ifdef _DEBUG
-	#ifdef _WINDOWS
+	#ifdef CONSOLE_DEBUG
 		std::shared_ptr<spdlog::logger> console;
-	#endif
 	#endif
 
 	//Constructor
