@@ -16,7 +16,8 @@ Extension::Extension(std::string _name, std::string _version) {
 	Name = _name;
 	Version = _version;
 
-	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+	#ifdef _DEBUG
+	#ifdef _WINDOWS
 		AllocConsole();
 		SetConsoleTitle(TEXT("Console output"));
 		FILE *stream;
@@ -25,6 +26,7 @@ Extension::Extension(std::string _name, std::string _version) {
 		auto console_logger = spdlog::stdout_logger_mt("Console");
 		console.swap(console_logger);
 		console->info("{0} version {1} initialized ...", Name, Version);
+	#endif
 	#endif
 }
 
@@ -35,8 +37,10 @@ Extension::~Extension(){
 
 	shutDown = true;
 
-	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+	#ifdef _DEBUG
+	#ifdef _WINDOWS
 		console->info("{0} shutting down ...", Name);
+	#endif
 	#endif
 }
 

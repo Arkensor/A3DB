@@ -22,9 +22,11 @@ public:
 		if (c == -1 || c > (int)expected)
 			c = expected;
 
-#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-		ext->console->info("Loading worker threads..");
-#endif
+		#ifdef _DEBUG
+		#ifdef _WINDOWS
+			ext->console->info("Loading worker threads..");
+		#endif
+		#endif
 
 		for (int i = 0; i < c; i++)
 		{
@@ -34,9 +36,11 @@ public:
 
 		started = true;
 
-#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-		ext->console->info("Worker threads loaded!");
-#endif
+		#ifdef _DEBUG
+		#ifdef _WINDOWS
+			ext->console->info("Worker threads loaded!");
+		#endif
+		#endif
 	}
 
 	void add(T r)

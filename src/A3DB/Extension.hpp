@@ -18,9 +18,10 @@
 	#include <Windows.h>
 #endif
 
-
-#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
+#ifdef _DEBUG
+#ifdef _WINDOWS
 	#include "spdlog/spdlog.h"
+#endif
 #endif
 
 #include "Workload.hpp"
@@ -34,8 +35,10 @@ public:
 	std::string Name;
 	std::string Version;
 
-	#ifdef EXTENSION_DEBUG_OUTPUT_WINDOWS
-	std::shared_ptr<spdlog::logger> console;
+	#ifdef _DEBUG
+	#ifdef _WINDOWS
+		std::shared_ptr<spdlog::logger> console;
+	#endif
 	#endif
 
 	//Constructor
@@ -43,11 +46,9 @@ public:
 	~Extension();
 
 	//Public functions for extension class interaction
-
 	int call(char *output, int outputSize, const char *function, const char **args, int argsCnt);
 
 private:
-
 	Processor<Workload, Result> *processor;
 
 	int ticketID = 0;
