@@ -12,7 +12,6 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 
 #ifdef _WINDOWS
 	#include <Windows.h>
