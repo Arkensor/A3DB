@@ -3,6 +3,8 @@
 #ifndef __PROCESSOR_H_
 #define __PROCESSOR_H_
 
+#include <thread>
+
 #include "SafeQueue.hpp"
 #include "Extension.hpp"
 
@@ -28,7 +30,7 @@ public:
 
 		for (int i = 0; i < c; i++)
 		{
-			std::thread t(&Processor::run, this, f);
+			std::thread t([=] {run(f);});
 			t.detach();
 		}
 

@@ -19,7 +19,10 @@
 		#define CONSOLE_DEBUG
 		#include "spdlog/spdlog.h"
 	#endif
+#elif __GNUC__
+	#include <string.h>
 #endif
+
 
 #include "Workload.hpp"
 #include "Result.hpp"

@@ -68,7 +68,7 @@ std::vector<Result> Extension::process(Workload request)
 int Extension::call(char *output, int outputSize, const char *function, const char **args, int argsCnt) {
 
 	if (!allGood) {
-		strcpy_s(output, outputSize - 1, "There was an error when loading the extension please see logfiles for more information ...");
+		strncpy(output, "There was an error when loading the extension please see logfiles for more information ...", outputSize);
 		return 500;
 	}
 
@@ -78,7 +78,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 	}
 
 	if (!strcmp(function, "version")) {
-		strcpy_s(output, outputSize - 1, Version.c_str());
+		strncpy(output, Version.c_str(), outputSize);
 		return 1;
 	} else {
 		auto addedIDs = this->addRequest(function, args, argsCnt);
@@ -104,7 +104,7 @@ int Extension::checkResults(char *output, int outputSize) {
 	//processor->try_get_result
 	//Keep trying to get results, while checking return size < max size
 	//TODO
-	strcpy_s(output, outputSize - 1, "There were not ready results. Greetings Doggo");
+	strncpy(output, "There were not ready results. Greetings Doggo", outputSize);
 	return 404;
 }
 

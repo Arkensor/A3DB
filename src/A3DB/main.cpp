@@ -57,10 +57,11 @@ Extension *instance;
 	}
 
 	void __stdcall RVExtension(char *output, int outputSize, const char *function) {
-		strncpy_s(output, outputSize, "Please use the ARRAY input variant", _TRUNCATE);
+		strncpy(output, "Please use the Array Input Variant", outputSize--);
 	}
 
 	int __stdcall RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argsCnt) {
+		outputSize--;
 		return instance->call(output, outputSize, function, args, argsCnt);
 	}
 
