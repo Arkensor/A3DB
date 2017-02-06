@@ -22,10 +22,7 @@
 	#include <string.h>
 #endif
 
-<<<<<<< Updated upstream
-=======
 #include "spdlog/spdlog.h"
->>>>>>> Stashed changes
 
 #include "Workload.hpp"
 #include "Result.hpp"
