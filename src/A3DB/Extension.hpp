@@ -17,12 +17,15 @@
 	#include <Windows.h>
 	#ifdef _DEBUG
 		#define CONSOLE_DEBUG
-		#include "spdlog/spdlog.h"
 	#endif
 #elif __GNUC__
 	#include <string.h>
 #endif
 
+<<<<<<< Updated upstream
+=======
+#include "spdlog/spdlog.h"
+>>>>>>> Stashed changes
 
 #include "Workload.hpp"
 #include "Result.hpp"

@@ -12,7 +12,6 @@
 #define __RESULT_H_
 
 #include <string>
-#include <vector>
 
 class Result {
 public:
