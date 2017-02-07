@@ -48,7 +48,7 @@ void Extension::setup(int outputSize) {
 	processor->start(std::bind(&Extension::process, this, std::placeholders::_1), -1);
 
 	workerActive = true;
-	max_size = outputSize - 2;
+	max_size = outputSize - 12; //Account for the extra characters in the array ([] , codes) etc
 
 	//Everything should be good now
 	allGood = true;
