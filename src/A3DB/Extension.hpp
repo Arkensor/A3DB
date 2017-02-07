@@ -35,6 +35,9 @@ public:
 	std::string Name;
 	std::string Version;
 
+	bool allGood = true;
+	bool shutDown = false;
+
 	#ifdef CONSOLE_DEBUG
 		std::shared_ptr<spdlog::logger> console;
 	#endif
@@ -49,11 +52,8 @@ public:
 private:
 	Processor<Workload, Result> *processor;
 
-	bool allGood = true;
-
 	// Request Mangement
 	bool workerActive = false;
-	bool shutDown = false;
 	int ticketID = 0;
 	int max_size;
 
