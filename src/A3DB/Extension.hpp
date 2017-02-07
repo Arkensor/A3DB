@@ -63,7 +63,5 @@ private:
 	std::vector<int> addRequest(const char *function, const char **args, int argCnt);
 	int checkResults(char *output, int outputSize);
 	std::vector<Result> process(Workload request);
-
-	//void MySQLquery(std::string WorkloadCategory, std::vector<std::string> WorkloadData);
 };
 #endif
