@@ -19,6 +19,11 @@ public:
 	std::string ResultData;
 	bool IsMultiPart = false;
 	int PartIndex;
-	Result(int uid, std::string result, bool multipart = false, int index = 0);
+	Result(int uid, std::string result, bool multipart = false, int index = 0) {
+		UniqueID = uid;
+		ResultData = result;
+		IsMultiPart = multipart;
+		PartIndex = index;
+	}
 };
 #endif

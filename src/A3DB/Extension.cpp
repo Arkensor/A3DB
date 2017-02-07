@@ -137,7 +137,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		ret += "]";
 		strncpy(output, ret.c_str(), outputSize);
 	}
-	return 0;
+	return 2;
 }
 
 //http://stackoverflow.com/a/1489928

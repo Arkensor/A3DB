@@ -18,6 +18,10 @@ public:
 	int id;
 	std::string WorkloadCategory;
 	std::string WorkloadData;
-	Workload(int _id, const char *category, const char *request);
+	Workload(int _id, const char *category, const char *request) {
+		id = _id;
+		WorkloadCategory = category;
+		WorkloadData = std::string(request);
+	}
 };
 #endif
