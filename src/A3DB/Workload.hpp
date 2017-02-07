@@ -15,15 +15,9 @@
 
 class Workload {
 public:
-	//Attributes
 	int id;
 	std::string WorkloadCategory;
 	std::string WorkloadData;
-
-	//Constructor, no destructor overload needed here
 	Workload(int _id, const char *category, const char *request);
-
-	//Utils
-	std::string Trim(std::string s);
 };
 #endif

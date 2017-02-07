@@ -65,9 +65,9 @@ std::vector<Result> Extension::process(Workload request)
 	//end of proof of concept
 
 	//Need to find the most optimal max size to store, to if there is lots of big results, little results get returned too..
-	int max_scaled_size = (int)(0.8 * max_size);
+	unsigned int max_scaled_size = (int)(0.8 * max_size);
 	int i = 0;
-	while (res.length() > max_scaled_size)
+	while ((unsigned int)res.length() > max_scaled_size)
 	{
 		Result r(request.id, res.substr(0, max_scaled_size), true, i);
 		results.push_back(r);
@@ -85,8 +85,10 @@ std::vector<Result> Extension::process(Workload request)
 
 int Extension::call(char *output, int outputSize, const char *function, const char **args, int argsCnt) {
 
+	outputSize--;
+
 	if (!allGood) {
-		strncpy(output, "There was an error when loading the extension please see logfiles for more information ...", outputSize);
+		strncpy_s(output, outputSize,"There was an error when loading the extension please see logfiles for more information ...", outputSize);
 		return 500;
 	}
 
@@ -96,7 +98,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 	}
 
 	if (!strcmp(function, "version")) {
-		strncpy(output, Version.c_str(), outputSize);
+		strncpy_s(output, outputSize, Version.c_str(), outputSize);
 		return 1;
 	} else {
 		std::vector<int> addedIDs;
@@ -133,7 +135,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 			}
 		}
 		ret += "]";
-		strncpy(output, ret.c_str(), outputSize);
+		strncpy_s(output, outputSize, ret.c_str(), outputSize);
 	}
 	return 0;
 }

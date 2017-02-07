@@ -15,7 +15,7 @@ Extension *instance;
 #ifdef __GNUC__
 
 	//For linux use GCC compiler syntax to for lib attach and detach
-	static void __attribute__((constructor)) extension_init(void) {instance = new Extension("A3DB", "0.9_doggo_dev");}
+	static void __attribute__((constructor)) extension_init(void) {instance = new Extension("A3DB", "1.0");}
 	static void __attribute__((destructor))	extension_destroy(void)	{delete instance;}
 
 	extern "C"
@@ -25,7 +25,7 @@ Extension *instance;
 	};
 
 	void RVExtension(char *output, int outputSize, const char *function) {
-		strncpy(output, "Please use the Array Input Variant", outputSize--);
+		strncpy_s(output, outputSize - 1, "Please use the Array Input Variant", outputSize - 1);
 	}
 
 	int RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argCnt) {
@@ -41,7 +41,7 @@ Extension *instance;
 		switch (ul_reason_for_call)
 		{
 			case DLL_PROCESS_ATTACH:
-				instance = new Extension("A3DB", "0.9_doggo_dev");
+				instance = new Extension("A3DB", "1.0");
 			break;
 
 			case DLL_PROCESS_DETACH:
@@ -57,11 +57,10 @@ Extension *instance;
 	}
 
 	void __stdcall RVExtension(char *output, int outputSize, const char *function) {
-		strncpy(output, "Please use the Array Input Variant", outputSize--);
+		strncpy_s(output, outputSize-1, "Please use the Array Input Variant", outputSize-1);
 	}
 
 	int __stdcall RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argsCnt) {
-		outputSize--;
 		return instance->call(output, outputSize, function, args, argsCnt);
 	}
 
