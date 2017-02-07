@@ -70,7 +70,7 @@ private:
 
 	void run(std::function<std::vector<U>(T)> f)
 	{
-		while (!shutDown && allGood)
+		while (!extensionPtr->shutDown && extensionPtr->allGood)
 		{
 			T arg = request_q.dequeue();
 			std::vector<U> results = f(arg);
