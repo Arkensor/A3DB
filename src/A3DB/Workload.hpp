@@ -7,6 +7,7 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
+
 #ifndef __WORKLOAD_H_
 #define __WORKLOAD_H_
 
