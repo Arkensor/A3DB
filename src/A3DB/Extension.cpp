@@ -57,16 +57,12 @@ void Extension::setup(int outputSize) {
 std::vector<Result> Extension::process(Workload request)
 {
 	std::vector<Result> results;
-	int size = stoi(request.WorkloadData);
-	//proof of concept, adds 1's to a string equal to the input int count (e.g 5000 1's) 
-	std::string res; //res will be the query result as a string, after passing for arma format etc.
-	for (int i = 0; i < size; i++)
-		res += "1";
-	//end of proof of concept
+
+	std::string res = "Doggo";
 
 	//Need to find the most optimal max size to store, to if there is lots of big results, little results get returned too..
-	unsigned int max_scaled_size = (int)(0.8 * max_size);
-	int i = 0;
+	unsigned int max_scaled_size = (unsigned int)(0.8 * max_size);
+	unsigned int i = 0;
 	while ((unsigned int)res.length() > max_scaled_size)
 	{
 		Result r(request.id, res.substr(0, max_scaled_size), true, i);
@@ -76,9 +72,6 @@ std::vector<Result> Extension::process(Workload request)
 	}
 	Result r(request.id, res, i != 0, i);
 	results.push_back(r);
-
-	//TODO
-	//process request query
 
 	return results;
 }
@@ -97,10 +90,13 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		if (!workerActive){allGood = false;}
 	}
 
+	console->info("The function {0} was called", function);
+
 	if (!strcmp(function, "version")) {
 		strncpy(output, Version.c_str(), outputSize);
 		return 1;
 	} else {
+
 		std::vector<int> addedIDs;
 		if (argsCnt)
 			addedIDs = this->addRequest(function, args, argsCnt);
@@ -108,6 +104,8 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		int current_size = 2;
 		bool has_returned_id = false;
 		std::string ret = "[";
+
+		//Check for ID returns
 		if (!addedIDs.empty())
 		{
 			for (int id : addedIDs)
@@ -119,6 +117,8 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 			current_size--;
 			has_returned_id = true;
 		}
+
+		//Check for results
 		std::vector<Result> results;
 		if (this->checkResults(results, current_size))
 		{
@@ -141,7 +141,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 }
 
 //http://stackoverflow.com/a/1489928
-unsigned Extension::number_of_digits(unsigned i)
+unsigned int Extension::number_of_digits(unsigned int i)
 {
 	return i > 0 ? (int)log10((double)i) + 1 : 1;
 }
@@ -163,8 +163,14 @@ std::vector<int> Extension::addRequest(const char *function, const char **args, 
 	for (int i = 0; i < argCnt; i++) {
 		int id = ++ticketID;
 		ids.push_back(id);
-		auto req = Workload(id, function, args[i]);
-		processor->add(req);
+
+		console->info("\n");
+		console->info("A new Workload incoming:");
+		console->info("Function: {0}", function);
+		console->info("Arguement: {0}", args[i]);
+		console->info("Assigned ID: {0}", id);
+
+		processor->add(Workload(id, function, args[i]));
 	}
 	return ids;
 }
