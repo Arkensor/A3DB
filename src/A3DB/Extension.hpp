@@ -15,9 +15,9 @@
 
 #ifdef _WINDOWS
 	#include <Windows.h>
-	//#ifdef _DEBUG
+	#ifdef _DEBUG
 		#define CONSOLE_DEBUG
-	//#endif
+	#endif
 #elif __GNUC__
 	#include <string.h>
 #endif
@@ -62,8 +62,8 @@ private:
 
 	std::vector<int> addRequest(const char *function, const char **args, int argCnt);
 	bool checkResults(std::vector<Result>& results, int current_size);
-	unsigned number_of_digits(unsigned i);
 	std::string result_to_string(Result res);
 	std::vector<Result> process(Workload request);
+	unsigned int digitsCnt(unsigned int i);
 };
 #endif

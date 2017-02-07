@@ -8,7 +8,6 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-//#include "mariadb\mysql.h"
 #include "Extension.hpp"
 #include "Processor.hpp"
 
@@ -111,7 +110,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		{
 			for (int id : addedIDs)
 			{
-				current_size += number_of_digits(id) + 1;
+				current_size += digitsCnt(id) + 1;
 				ret += std::to_string(id);
 				ret += ",";
 			}
@@ -139,12 +138,6 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		strncpy(output, ret.c_str(), outputSize);
 	}
 	return 2;
-}
-
-//http://stackoverflow.com/a/1489928
-unsigned int Extension::number_of_digits(unsigned int i)
-{
-	return i > 0 ? (int)log10((double)i) + 1 : 1;
 }
 
 std::string Extension::result_to_string(Result res)
@@ -178,4 +171,10 @@ std::vector<int> Extension::addRequest(const char *function, const char **args, 
 
 bool Extension::checkResults(std::vector<Result>& results, int current_size) {
 	return processor->try_get_results(results, current_size, this->max_size);
+}
+
+//Third Party Code
+unsigned int Extension::digitsCnt(unsigned int i)
+{
+	return i > 0 ? (int)log10((double)i) + 1 : 1; //From http://stackoverflow.com/a/1489928
 }
