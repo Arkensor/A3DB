@@ -60,6 +60,24 @@ public:
 		return false;
 	}
 
+	bool try_pop_results(std::vector<T> &r, unsigned int current_size, unsigned int max_size)
+	{
+		max_size--;
+		if (current_size >= max_size) return false;
+		std::lock_guard<std::mutex> lock(m);
+		if (q.empty()) return false;
+		while (!q.empty())
+		{
+			T temp = q.front();
+			int len = temp.ResultData.length() + 4;
+			if (len + current_size > max_size) break;
+			q.pop();
+			r.push_back(temp);
+			current_size += len;
+		}
+		return !r.empty();
+	}
+
 	size_t size()
 	{
 		std::lock_guard<std::mutex> lock(m);

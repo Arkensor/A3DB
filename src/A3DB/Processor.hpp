@@ -51,6 +51,11 @@ public:
 		return result_q.try_pop_result(r);
 	}
 
+	bool try_get_results(std::vector<U>& r, unsigned int current_size, unsigned int max_size)
+	{
+		return result_q.try_pop_results(r, current_size, max_size);
+	}
+
 	size_t request_size()
 	{
 		return result_q.size();

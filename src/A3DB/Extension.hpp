@@ -50,7 +50,7 @@ private:
 	Processor<Workload, Result> *processor;
 
 	int ticketID = 0;
-
+	int max_size;
 	//Block all requets if there was an error in the extension
 	bool allGood = true;
 
@@ -58,10 +58,12 @@ private:
 	bool workerActive = false;
 	bool shutDown = false;
 
-	void setup();
+	void setup(int outputSize);
 
 	std::vector<int> addRequest(const char *function, const char **args, int argCnt);
-	int checkResults(char *output, int outputSize);
+	bool checkResults(std::vector<Result>& results, int current_size);
+	unsigned number_of_digits(unsigned i);
+	std::string result_to_string(Result res);
 	std::vector<Result> process(Workload request);
 };
 #endif
