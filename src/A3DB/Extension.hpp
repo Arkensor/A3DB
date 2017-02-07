@@ -49,14 +49,13 @@ public:
 private:
 	Processor<Workload, Result> *processor;
 
-	int ticketID = 0;
-	int max_size;
-	//Block all requets if there was an error in the extension
 	bool allGood = true;
 
 	// Request Mangement
 	bool workerActive = false;
 	bool shutDown = false;
+	int ticketID = 0;
+	int max_size;
 
 	void setup(int outputSize);
 

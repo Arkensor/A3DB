@@ -81,6 +81,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 	outputSize--;
 
 	if (!allGood) {
+		//Block all requets if there was an error in the extension
 		strncpy(output, "There was an error when loading the extension please see logfiles for more information ...", outputSize);
 		return 500;
 	}
