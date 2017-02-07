@@ -13,7 +13,7 @@ class Processor
 {
 public:
 
-	Processor(Extension *p) : ext(p) {}
+	Processor(Extension *p) : extensionPtr(p) {}
 
 	void start(std::function<std::vector<U>(T)> f, int c)
 	{
@@ -25,7 +25,7 @@ public:
 			c = expected;
 
 		#ifdef CONSOLE_DEBUG
-		ext->console->info("Loading worker threads..");
+		extensionPtr->console->info("Loading worker threads..");
 		#endif
 
 		for (int i = 0; i < c; i++)
@@ -37,7 +37,7 @@ public:
 		started = true;
 
 		#ifdef CONSOLE_DEBUG
-		ext->console->info("Worker threads loaded!");
+		extensionPtr->console->info("Worker threads loaded!");
 		#endif
 	}
 
@@ -83,7 +83,7 @@ private:
 
 	bool started = false;
 
-	Extension *ext;
+	Extension *extensionPtr;
 
 	SafeQueue<U> result_q;
 	SafeQueue<T> request_q;
