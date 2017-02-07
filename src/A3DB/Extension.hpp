@@ -7,6 +7,7 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
+
 #ifndef __EXTENSION_H_
 #define __EXTENSION_H_
 

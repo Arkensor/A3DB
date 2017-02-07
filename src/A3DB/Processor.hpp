@@ -1,4 +1,12 @@
-//header
+/*
+		_    _____  ____  ____
+	   / \  |___ / |  _ \| __ )
+	  / _ \   |_ \ | | | |  _ \
+	 / ___ \ ___)  | |_| | |_) |
+	/_/   \_\____/ |____/|____/
+
+	a cross database extension for Arma 3 by Arkensor
+*/
 
 #ifndef __PROCESSOR_H_
 #define __PROCESSOR_H_
