@@ -15,9 +15,9 @@
 
 #ifdef _WINDOWS
 	#include <Windows.h>
-	#ifdef _DEBUG
+	//#ifdef _DEBUG
 		#define CONSOLE_DEBUG
-	#endif
+	//#endif
 #elif __GNUC__
 	#include <string.h>
 #endif
