@@ -20,15 +20,6 @@ template <class T>
 class SafeQueue
 {
 public:
-	SafeQueue(void)
-		: q()
-		, m()
-		, c()
-	{}
-
-	~SafeQueue(void)
-	{}
-
 	void enqueue(T t)
 	{
 		std::lock_guard<std::mutex> lock(m);

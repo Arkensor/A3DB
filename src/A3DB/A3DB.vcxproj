@@ -145,8 +145,6 @@
   <ItemGroup>
     <ClCompile Include="Extension.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Result.cpp" />
-    <ClCompile Include="Workload.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Extension.hpp" />

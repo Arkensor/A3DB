@@ -34,10 +34,7 @@ Extension *instance;
 
 #elif _MSC_VER
 
-	//Lib Attach and detach windows version
-	#include <windows.h>
-
-	BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+	int __stdcall DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
 		switch (ul_reason_for_call)
 		{
 			case DLL_PROCESS_ATTACH:
@@ -48,7 +45,7 @@ Extension *instance;
 				delete instance;
 			break;
 		}
-		return TRUE;
+		return 1;
 	}
 
 	extern "C" {
