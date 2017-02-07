@@ -62,15 +62,16 @@ std::vector<Result> Extension::process(Workload request)
 
 	//Need to find the most optimal max size to store, to if there is lots of big results, little results get returned too..
 	unsigned int max_scaled_size = (unsigned int)(0.8 * max_size);
-	unsigned int i = 0;
+	unsigned int i = res.length()/max_scaled_size;
+	bool multi_part = i == 0;
 	while ((unsigned int)res.length() > max_scaled_size)
 	{
 		Result r(request.id, res.substr(0, max_scaled_size), true, i);
 		results.push_back(r);
 		res = res.substr(max_scaled_size);
-		i++;
+		i--;
 	}
-	Result r(request.id, res, i != 0, i);
+	Result r(request.id, res, multi_part, multi_part ? 0 : -1);
 	results.push_back(r);
 
 	return results;
