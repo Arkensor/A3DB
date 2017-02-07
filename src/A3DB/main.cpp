@@ -25,7 +25,7 @@ Extension *instance;
 	};
 
 	void RVExtension(char *output, int outputSize, const char *function) {
-		strncpy_s(output, outputSize - 1, "Please use the Array Input Variant", outputSize - 1);
+		strncpy_s(output, outputSize - 1, "Please use the Array Input Variant", _TRUNCATE);
 	}
 
 	int RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argCnt) {
@@ -57,7 +57,7 @@ Extension *instance;
 	}
 
 	void __stdcall RVExtension(char *output, int outputSize, const char *function) {
-		strncpy_s(output, outputSize-1, "Please use the Array Input Variant", outputSize-1);
+		strncpy_s(output, outputSize-1, "Please use the Array Input Variant", _TRUNCATE);
 	}
 
 	int __stdcall RVExtensionArgs(char *output, int outputSize, const char *function, const char **args, int argsCnt) {

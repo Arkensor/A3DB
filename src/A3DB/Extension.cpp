@@ -88,7 +88,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 	outputSize--;
 
 	if (!allGood) {
-		strncpy_s(output, outputSize,"There was an error when loading the extension please see logfiles for more information ...", outputSize);
+		strncpy_s(output, outputSize,"There was an error when loading the extension please see logfiles for more information ...", _TRUNCATE);
 		return 500;
 	}
 
@@ -98,7 +98,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 	}
 
 	if (!strcmp(function, "version")) {
-		strncpy_s(output, outputSize, Version.c_str(), outputSize);
+		strncpy_s(output, outputSize, Version.c_str(), _TRUNCATE);
 		return 1;
 	} else {
 		std::vector<int> addedIDs;
@@ -135,7 +135,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 			}
 		}
 		ret += "]";
-		strncpy_s(output, outputSize, ret.c_str(), outputSize);
+		strncpy_s(output, outputSize, ret.c_str(), _TRUNCATE);
 	}
 	return 0;
 }
