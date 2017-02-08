@@ -42,7 +42,7 @@ void Extension::setup(int outputSize) {
 	if (workerActive) return;
 	
 	processor = new Processor<Workload, Result>(this);
-	processor->start(std::bind(&Extension::process, this, std::placeholders::_1), -1);
+	processor->start(std::bind(&Extension::worker, this, std::placeholders::_1), -1);
 
 	workerActive = true;
 	max_size = outputSize - 12; //Account for the extra characters in the array ([] , codes) etc
@@ -51,11 +51,16 @@ void Extension::setup(int outputSize) {
 	allGood = true;
 }
 
-std::vector<Result> Extension::process(Workload request)
+std::vector<Result> Extension::worker(Workload request)
 {
 	std::vector<Result> results;
 
-	std::string res = "Doggo";
+	std::string res;
+
+	//proof of concept, adds 1's to a string equal to the input int count (e.g 5000 1's)
+	int size = stoi(request.WorkloadData);
+	for (int i = 0; i < size; i++)
+		res += "1";
 
 	//Need to find the most optimal max size to store, to if there is lots of big results, little results get returned too..
 	unsigned int max_scaled_size = (unsigned int)(0.8 * max_size);
