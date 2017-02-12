@@ -59,7 +59,7 @@ private:
 
 	void setup(int outputSize);
 
-	std::vector<int> addRequest(const char *function, const char **args, int argCnt);
+	void addRequest(const char *function, const char **args, int argCnt);
 	bool checkResults(std::vector<Result>& results, int current_size);
 	std::string result_to_string(Result res);
 	std::vector<Result> worker(Workload request);

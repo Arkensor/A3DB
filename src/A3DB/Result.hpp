@@ -19,6 +19,6 @@ public:
 	std::string ResultData;
 	bool IsMultiPart = false;
 	int PartIndex;
-	Result(int uid, std::string result, bool multipart = false, int index = 0) : id(uid), ResultData(result), IsMultiPart(multipart), PartIndex(index) {}
+	Result(float _id, std::string result, bool multipart = false, int index = 0) : id(_id), ResultData(result), IsMultiPart(multipart), PartIndex(index) {}
 };
 #endif

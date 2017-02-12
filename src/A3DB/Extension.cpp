@@ -162,7 +162,7 @@ std::string Extension::result_to_string(Result res)
 	return ret;
 }
 
-std::vector<int> Extension::addRequest(const char *function, const char **args, int argCnt) {
+void Extension::addRequest(const char *function, const char **args, int argCnt) {
 	//std::vector<int> ids;
 	for (int i = 0; i < argCnt; i++) {
 
