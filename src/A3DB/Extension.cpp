@@ -68,12 +68,12 @@ std::vector<Result> Extension::worker(Workload request)
 	bool multi_part = i != 0;
 	while ((unsigned int)res.length() > max_scaled_size)
 	{
-		Result r(request.id, res.substr(0, max_scaled_size), true, i);
+		Result r(request.id, request.id_length, res.substr(0, max_scaled_size), true, i);
 		results.push_back(r);
 		res = res.substr(max_scaled_size);
 		i--;
 	}
-	Result r(request.id, res, multi_part, multi_part ? 0 : -1);
+	Result r(request.id, request.id_length, res, multi_part, multi_part ? 0 : -1);
 	results.push_back(r);
 
 	return results;
@@ -94,7 +94,9 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		if (!workerActive){allGood = false;}
 	}
 
-	console->info("The function {0} was called", function);
+#ifdef CONSOLE_DEBUG
+	console->info("The function '{0}' was called", function);
+#endif
 
 	if (!strcmp(function, "version")) {
 		strncpy(output, Version.c_str(), outputSize);
@@ -170,25 +172,25 @@ void Extension::addRequest(const char *function, const char **args, int argCnt) 
 		//ids.push_back(id);
 
 		std::string request_string(args[i]);
-		request_string = request_string.substr(1, request_string.size() - 2);
 
 		std::size_t index = request_string.find(":");
 
-		float ticket_id = std::stof(request_string.substr(0, index - 1));
+		std::string ticket_id_str = request_string.substr(0, index);
+		float ticket_id = std::stof(ticket_id_str);
+		int ticket_id_len = ticket_id_str.size();
 
-		std::string query = request_string.substr(index - 1);
-
-
+		std::string query = request_string.substr(index + 1);
 
 #ifdef CONSOLE_DEBUG
-		console->info("\n");
 		console->info("A new Workload incoming:");
 		console->info("Function: {0}", function);
 		console->info("Argument: {0}", args[i]);
 		console->info("ID: {0}", ticket_id);
+		console->info("\n");
 #endif
 
-		processor->add(Workload(ticket_id, function, query));
+		processor->add(Workload(ticket_id, ticket_id_len, function, query));
+
 	}
 	//return ids;
 }
