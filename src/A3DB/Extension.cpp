@@ -101,14 +101,16 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		return 1;
 	} else {
 
-		std::vector<int> addedIDs;
+		//std::vector<int> addedIDs;
 		if (argsCnt)
-			addedIDs = this->addRequest(function, args, argsCnt);
+			this->addRequest(function, args, argsCnt);
+			//addedIDs = this->addRequest(function, args, argsCnt);
 
 		int current_size = 2;
-		bool has_returned_id = false;
+		//bool has_returned_id = false;
 		std::string ret = "[";
 
+		/*
 		//Check for ID returns
 		if (!addedIDs.empty())
 		{
@@ -121,6 +123,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 			current_size--;
 			has_returned_id = true;
 		}
+		*/
 
 		//Check for results
 		std::vector<Result> results;
@@ -132,12 +135,15 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 				ret += ",";
 			}
 			ret.pop_back();
+		}
+		/*
 		} else {
 			if (has_returned_id)
 			{
 				ret.pop_back();
 			}
 		}
+		*/
 		ret += "]";
 		strncpy(output, ret.c_str(), outputSize);
 	}
@@ -147,7 +153,7 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 std::string Extension::result_to_string(Result res)
 {
 	std::string ret = "[";
-	ret += std::to_string(res.UniqueID);
+	ret += std::to_string(res.id);
 	ret += ",";
 	ret += res.IsMultiPart ? std::to_string(res.PartIndex) : "-1";
 	ret += ",";
@@ -157,20 +163,34 @@ std::string Extension::result_to_string(Result res)
 }
 
 std::vector<int> Extension::addRequest(const char *function, const char **args, int argCnt) {
-	std::vector<int> ids;
+	//std::vector<int> ids;
 	for (int i = 0; i < argCnt; i++) {
-		int id = ++ticketID;
-		ids.push_back(id);
 
+		//int id = ++ticketID;
+		//ids.push_back(id);
+
+		std::string request_string(args[i]);
+		request_string = request_string.substr(1, request_string.size() - 2);
+
+		std::size_t index = request_string.find(":");
+
+		float ticket_id = std::stof(request_string.substr(0, index - 1));
+
+		std::string query = request_string.substr(index - 1);
+
+
+
+#ifdef CONSOLE_DEBUG
 		console->info("\n");
 		console->info("A new Workload incoming:");
 		console->info("Function: {0}", function);
-		console->info("Arguement: {0}", args[i]);
-		console->info("Assigned ID: {0}", id);
+		console->info("Argument: {0}", args[i]);
+		console->info("ID: {0}", ticket_id);
+#endif
 
-		processor->add(Workload(id, function, args[i]));
+		processor->add(Workload(ticket_id, function, query));
 	}
-	return ids;
+	//return ids;
 }
 
 bool Extension::checkResults(std::vector<Result>& results, int current_size) {

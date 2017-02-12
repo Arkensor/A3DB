@@ -16,9 +16,9 @@
 
 class Workload {
 public:
-	int id;
+	float id;
 	std::string WorkloadCategory;
 	std::string WorkloadData;
-	Workload(int _id, const char *category, const char *request) : id(_id), WorkloadCategory(category), WorkloadData(std::string(request)) {}
+	Workload(int _id, const char *category, std::string request) : id(_id), WorkloadCategory(category), WorkloadData(request) {}
 };
 #endif

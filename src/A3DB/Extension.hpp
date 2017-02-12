@@ -55,7 +55,6 @@ private:
 
 	// Request Mangement
 	bool workerActive = false;
-	int ticketID = 0;
 	int max_size;
 
 	void setup(int outputSize);
