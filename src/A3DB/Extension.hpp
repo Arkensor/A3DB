@@ -60,6 +60,7 @@ private:
 	void setup(int outputSize);
 
 	void addRequest(const char *function, const char **args, int argCnt);
+	std::vector<std::string> delimiter_split(const std::string &str, char delimiter);
 	bool checkResults(std::vector<Result>& results, int current_size);
 	std::string result_to_string(Result res);
 	std::vector<Result> worker(Workload request);

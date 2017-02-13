@@ -18,8 +18,10 @@ class Workload {
 public:
 	float id;
 	int id_length;
-	std::string WorkloadCategory;
+	std::string Type;
 	std::string WorkloadData;
-	Workload(float _id, int _id_len, const char *category, std::string request) : id(_id), id_length(_id_len), WorkloadCategory(category), WorkloadData(request) {}
+	std::vector<std::string> Arguments;
+	Workload(float _id, int _id_len, std::string _type, std::string _workloaddata) : id(_id), id_length(_id_len), Type(_type), WorkloadData(_workloaddata) {}
+	Workload(float _id, int _id_len, std::string _type, std::string _workloaddata, std::vector<std::string> _arguments) : id(_id), id_length(_id_len), Type(_type), WorkloadData(_workloaddata), Arguments(_arguments) {}
 };
 #endif

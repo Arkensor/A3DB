@@ -8,8 +8,11 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
+#include <sstream>
+
 #include "Extension.hpp"
 #include "Processor.hpp"
+
 
 Extension::Extension(std::string _name, std::string _version) : Name(_name), Version(_version) {
 
@@ -94,9 +97,9 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 		if (!workerActive){allGood = false;}
 	}
 
-#ifdef CONSOLE_DEBUG
+	#ifdef CONSOLE_DEBUG
 	console->info("The function '{0}' was called", function);
-#endif
+	#endif
 
 	if (!strcmp(function, "version")) {
 		strncpy(output, Version.c_str(), outputSize);
@@ -152,6 +155,84 @@ int Extension::call(char *output, int outputSize, const char *function, const ch
 	return 2;
 }
 
+void Extension::addRequest(const char *function, const char **args, int argCnt) {
+	//std::vector<int> ids;
+	for (int i = 0; i < argCnt; i++) {
+
+		//int id = ++ticketID;
+		//ids.push_back(id);
+
+		std::string request_string(args[i]);
+
+		std::vector<std::string> parts = delimiter_split(request_string, 31);
+
+		if (parts.empty())
+		{
+			//Exit with an error
+		}
+
+		if (parts.size() < 3)
+		{
+			//Exit with an error (needs atleast ID/type/query)
+		}
+
+		std::string ticket_id_str(parts[0]);
+
+		float ticket_id = std::stof(ticket_id_str);
+		int ticket_id_len = ticket_id_str.size();
+
+		std::string type(parts[1]);
+
+		std::string query(parts[2]);
+
+		#ifdef CONSOLE_DEBUG
+		console->info("A new Workload incoming:");
+		console->info("Type: {0}", type);
+		console->info("Query: {0}", query);
+		console->info("ID: {0}", ticket_id);
+		#endif
+
+		if (parts.size() > 3)
+		{
+			std::vector<std::string> arguments(parts.begin() + 3, parts.end());
+
+			#ifdef CONSOLE_DEBUG
+			console->info("Arguments: ");
+			for (auto s : arguments)
+				console->info(s);
+			#endif
+
+			processor->add(Workload(ticket_id, ticket_id_len, type, query, arguments));
+		}
+		else
+		{
+			processor->add(Workload(ticket_id, ticket_id_len, type, query));
+		}
+
+		#ifdef CONSOLE_DEBUG
+		console->info("\n");
+		#endif
+
+	}
+	//return ids;
+}
+
+bool Extension::checkResults(std::vector<Result>& results, int current_size) {
+	return processor->try_get_results(results, current_size, this->max_size);
+}
+
+std::vector<std::string> Extension::delimiter_split(const std::string &str, char delimiter) {
+
+	std::vector<std::string> ret;
+	std::stringstream string_stream(str);
+	std::string next_string;
+
+	while (std::getline(string_stream, next_string, delimiter))
+		ret.push_back(std::move(next_string));
+
+	return ret;
+}
+
 std::string Extension::result_to_string(Result res)
 {
 	std::string ret = "[";
@@ -162,41 +243,6 @@ std::string Extension::result_to_string(Result res)
 	ret += res.ResultData;
 	ret += "]";
 	return ret;
-}
-
-void Extension::addRequest(const char *function, const char **args, int argCnt) {
-	//std::vector<int> ids;
-	for (int i = 0; i < argCnt; i++) {
-
-		//int id = ++ticketID;
-		//ids.push_back(id);
-
-		std::string request_string(args[i]);
-
-		std::size_t index = request_string.find(":");
-
-		std::string ticket_id_str = request_string.substr(0, index);
-		float ticket_id = std::stof(ticket_id_str);
-		int ticket_id_len = ticket_id_str.size();
-
-		std::string query = request_string.substr(index + 1);
-
-#ifdef CONSOLE_DEBUG
-		console->info("A new Workload incoming:");
-		console->info("Function: {0}", function);
-		console->info("Argument: {0}", args[i]);
-		console->info("ID: {0}", ticket_id);
-		console->info("\n");
-#endif
-
-		processor->add(Workload(ticket_id, ticket_id_len, function, query));
-
-	}
-	//return ids;
-}
-
-bool Extension::checkResults(std::vector<Result>& results, int current_size) {
-	return processor->try_get_results(results, current_size, this->max_size);
 }
 
 //Third Party Code
