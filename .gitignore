@@ -51,3 +51,9 @@ src/A3DB/Release/
 src/A3DB/Debug/
 src/.vs/
 .vs/
+
+addon/@A3DB/addons/A3DB/\.idea/
+
+addon/@A3DB/A3DB\.iml
+
+addon/@A3DB/addons/A3DB/A3DB\.iml
