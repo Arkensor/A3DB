@@ -176,14 +176,11 @@ void Extension::addRequest(const char *function, const char **args, int argCnt) 
 			//Exit with an error (needs atleast ID/type/query)
 		}
 
-		std::string ticket_id_str(parts[0]);
-
-		float ticket_id = std::stof(ticket_id_str);
-		int ticket_id_len = ticket_id_str.size();
-
+		std::string ticket_id(parts[0]);
 		std::string type(parts[1]);
-
 		std::string query(parts[2]);
+		
+		int ticket_id_len = ticket_id.size();
 
 		#ifdef CONSOLE_DEBUG
 		console->info("A new Workload incoming:");
