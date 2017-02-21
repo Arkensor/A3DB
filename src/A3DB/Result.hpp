@@ -15,11 +15,11 @@
 
 class Result {
 public:
-	float id;
+	std::string id;
 	int id_length;
 	std::string ResultData;
 	bool IsMultiPart = false;
 	int PartIndex;
-	Result(float _id, int _id_len, std::string result, bool multipart = false, int index = 0) : id(_id), id_length(_id_len), ResultData(result), IsMultiPart(multipart), PartIndex(index) {}
+	Result(std::string _id, int _id_len, std::string result, bool multipart = false, int index = 0) : id(_id), id_length(_id_len), ResultData(result), IsMultiPart(multipart), PartIndex(index) {}
 };
 #endif

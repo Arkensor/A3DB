@@ -64,6 +64,5 @@ private:
 	bool checkResults(std::vector<Result>& results, int current_size);
 	std::string result_to_string(Result res);
 	std::vector<Result> worker(Workload request);
-	unsigned int digitsCnt(unsigned int i);
 };
 #endif

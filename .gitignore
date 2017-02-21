@@ -57,3 +57,9 @@ addon/@A3DB/addons/A3DB/\.idea/
 addon/@A3DB/A3DB\.iml
 
 addon/@A3DB/addons/A3DB/A3DB\.iml
+/src/A3DB/x64/Debug/A3DB.tlog
+/src/A3DB/x64/Release/A3DB.tlog
+/src/A3DB/x64/Release/A3DB.log
+*.pdb
+/src/x64/Debug
+/src/x64/Release

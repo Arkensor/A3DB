@@ -60,7 +60,7 @@ public:
 		while (!q.empty())
 		{
 			T temp = q.front();
-			int len = temp.ResultData.length() + temp.id_length + 4; //the extra four comes from the [ ] and two commas for the ARMA array
+			int len = temp.ResultData.length() + temp.id_length + 4 + 4; //the extra four comes from the [ ] and two commas for the ARMA array + quotations
 			if (len + current_size > max_size) break;
 			q.pop();
 			r.push_back(temp);
