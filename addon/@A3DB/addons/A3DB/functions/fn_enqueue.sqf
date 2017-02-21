@@ -1,5 +1,5 @@
 /*
-		_    _____  ____  ____
+		_	_____  ____  ____
 	   / \  |___ / |  _ \| __ )
 	  / _ \   |_ \ | | | |  _ \
 	 / ___ \ ___)  | |_| | |_) |
@@ -8,8 +8,8 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 params [
-    ["_data", "", ["", 0]],
-    ["_type", "", ["", 0]]
+	["_data", "", ["", 0]],
+	["_type", "", ["", 0]]
 ];
 
 private "_ticketID";
