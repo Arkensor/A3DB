@@ -1,5 +1,5 @@
 /*
-		_    _____  ____  ____
+		_	_____  ____  ____
 	   / \  |___ / |  _ \| __ )
 	  / _ \   |_ \ | | | |  _ \
 	 / ___ \ ___)  | |_| | |_) |
@@ -7,20 +7,17 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
+//if (!canSuspend) exitWith {diag_log "Wrong context"};
 params [
-    ["_data", [], [[]]],
-    ["_type", 0, [0]],
-    ["_return", 1, [0]]
+	["_data", "", ["", 0]],
+	["_type", "", ["", 0]],
+	["_return", 1, [0]]
 ];
 
-private _ticketID = [_data,_type,_return] call A3DB_fnc_enqueue;
+private _ticketID = [_data,_type] call A3DB_fnc_enqueue;
 
-//We want to have a return value
-if (_return isEqualTo 1) then {
+if (_return isEqualTo 1) exitWith {
 
-    _result = [_ticketID] call A3DB_fnc_dequeue;
-
-    diag_log format["RESULT: %1", _result];
-
-    _result;
+	private _result = [_ticketID] call A3DB_fnc_dequeue;
+	_result;
 };

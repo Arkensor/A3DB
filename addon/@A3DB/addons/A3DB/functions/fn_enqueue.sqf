@@ -1,5 +1,5 @@
 /*
-		_    _____  ____  ____
+		_	_____  ____  ____
 	   / \  |___ / |  _ \| __ )
 	  / _ \   |_ \ | | | |  _ \
 	 / ___ \ ___)  | |_| | |_) |
@@ -8,12 +8,19 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 params [
-    ["_data", [], [[]]],
-    ["_type", 0, [0]],
-    ["_return", 1, [0]]
+	["_data", "", ["", 0]],
+	["_type", "", ["", 0]]
 ];
-//waitUntil{!A3DB_INPUT_LOCKED};
-private _ticketID = diag_tickTime;
-A3DB_INPUT_QUEUE pushBack [_ticketID, _type, _return, _data];
+
+private "_ticketID";
+isNil {
+	_ticketID = A3DB_TICKET_ID;
+	A3DB_TICKET_ID = A3DB_TICKET_ID + 1;
+};
+
+private _sep = toString [31];
+private _toAdd = format ["%2%1%3%1%4", _sep, _ticketID, _type, _data];
+
+A3DB_INPUT_QUEUE pushBack format ["%2%1%3%1%4", _sep, _ticketID, _type, _data];
 
 _ticketID

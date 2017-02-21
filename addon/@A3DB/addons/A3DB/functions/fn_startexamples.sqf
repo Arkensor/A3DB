@@ -1,5 +1,5 @@
 /*
-		_    _____  ____  ____
+		_	_____  ____  ____
 	   / \  |___ / |  _ \| __ )
 	  / _ \   |_ \ | | | |  _ \
 	 / ___ \ ___)  | |_| | |_) |
@@ -16,11 +16,11 @@ diag_log _result;
 
 [] spawn {
 
-    for "_i" from 0 to 20 do{
+	for "_i" from 0 to 20 do{
 
-        [["playerSelectGear",["playerid", "side", "whatever"]], "MYSQL_SELECT", true] spawn A3DB_fnc_query;
+		[["playerSelectGear",["playerid", "side", "whatever"]], "MYSQL_SELECT", true] spawn A3DB_fnc_query;
 
-    };
+	};
 
 };
 
@@ -35,21 +35,21 @@ diag_log _result;
 
 /*
 
-    private["_start", "_stop", "_result"];
+	private["_start", "_stop", "_result"];
 
-    _start = diag_tickTime;
-    _result = "A3DB" callExtension ["testcall",["par1", "par88", 1337]];
-    _stop = diag_tickTime;
-    diag_log format["Single -- Result: %1 - took %2ms", _result, (_stop - _start)];
+	_start = diag_tickTime;
+	_result = "A3DB" callExtension ["testcall",["par1", "par88", 1337]];
+	_stop = diag_tickTime;
+	diag_log format["Single -- Result: %1 - took %2ms", _result, (_stop - _start)];
 
-    [] spawn {
-        _start = diag_tickTime;
-        _result = "";
-            for "_i" from 1 to 10000 do {
-                _result = "A3DB" callExtension ["testcall",["par1", "par88", 1337]];
-            };
+	[] spawn {
+		_start = diag_tickTime;
+		_result = "";
+			for "_i" from 1 to 10000 do {
+				_result = "A3DB" callExtension ["testcall",["par1", "par88", 1337]];
+			};
 
-        _stop = diag_tickTime;
-        diag_log format["10000 runs -- Result: %1 - took %2ms (%2 / 10000 = %3)", _result, (_stop - _start), ((_stop - _start) / 10000)];
-    };
+		_stop = diag_tickTime;
+		diag_log format["10000 runs -- Result: %1 - took %2ms (%2 / 10000 = %3)", _result, (_stop - _start), ((_stop - _start) / 10000)];
+	};
 */

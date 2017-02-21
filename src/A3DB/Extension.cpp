@@ -185,6 +185,8 @@ void Extension::addRequest(const char *function, const char **args, int argCnt) 
 		std::string ticket_id(parts[0]);
 		std::string type(parts[1]);
 		std::string query(parts[2]);
+		
+		int ticket_id_len = ticket_id.size();
 
 		int ticket_id_len = ticket_id.size();
 /*
