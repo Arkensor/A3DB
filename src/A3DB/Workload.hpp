@@ -1,11 +1,11 @@
 /*
-_    _____  ____  ____
-/ \  |___ / |  _ \| __ )
-/ _ \   |_ \ | | | |  _ \
-/ ___ \ ___)  | |_| | |_) |
-/_/   \_\____/ |____/|____/
+	    _    _____  ____  ____
+	   / \  |___ / |  _ \| __ )
+	  / _ \   |_ \ | | | |  _ \
+	 / ___ \ ___)  | |_| | |_) |
+	/_/   \_\____/ |____/|____/
 
-a cross database extension for Arma 3 by Arkensor
+	a cross database extension for Arma 3 by Arkensor
 */
 
 #ifndef __WORKLOAD_H_
