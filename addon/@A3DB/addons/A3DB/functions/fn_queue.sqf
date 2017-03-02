@@ -16,6 +16,8 @@
     //Create NS
     A3DB_NS = createLocation ["Hill", [-1000, -1000, 0], 0, 0];
 
+    private _buffer = "";
+
     private _parseResult = {
         params [
             ["_data", [], [[]]]
@@ -25,8 +27,6 @@
         _data = parseSimpleArray (_data select 0);
 
         if !(_data isEqualTo []) then {
-
-            private _buffer = "";
 
             {
                 _buffer = _buffer + (_x select 2);
