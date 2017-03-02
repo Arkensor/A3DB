@@ -27,7 +27,6 @@
         _data = parseSimpleArray (_data select 0);
 
         if !(_data isEqualTo []) then {
-
             {
                 _buffer = _buffer + (_x select 2);
 
@@ -36,7 +35,7 @@
                     A3DB_NS setVariable [str (_x select 0), _buffer];
                     _buffer = "";
                 };
-                true;
+                true
             } count _data;
         };
     };
@@ -48,13 +47,13 @@
 			private _data = [];
 
 			isNil {
-
+                
 				{
 					_data pushBack _x;
-					true;
-				} count A3DB_INPUT_QUEUE;
+                    A3DB_INPUT_QUEUE deleteAt 0;
+                    if (_forEachIndex isEqualTo 1023) exitWith {};
+				} forEach +A3DB_INPUT_QUEUE;
 
-				A3DB_INPUT_QUEUE = [];
 			};
 
             private _result = "A3DB" callExtension ["INPUT",_data];
