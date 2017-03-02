@@ -9,36 +9,40 @@
 */
 [] spawn {
 
-	A3DB_INPUT_QUEUE = [];
-	A3DB_OUTPUT_QUEUE = [];
-	A3DB_DELETE_QUEUE = [];
-	A3DB_TICKET_ID = 0;
-	A3DB_BASE_FRAMETICK = 5;
-	A3DB_LOOP_COUNT = 0;
+    A3DB_INPUT_QUEUE = [];
+    A3DB_TICKET_ID = 0;
+    A3DB_BASE_FRAMETICK = 5;
 
-	while {true} do {
+    //Create NS
+    A3DB_NS = createLocation ["Hill", [-1000, -1000, 0], 0, 0];
 
-		if (A3DB_LOOP_COUNT >= 35) then {
-			if !((count A3DB_DELETE_QUEUE) isEqualTo 0) then {
+    private _buffer = "";
 
-				isNil {
-					{
-						private _toDelete = _x;
-						{
-							if((_x select 0) isEqualTo _toDelete) then {
-								A3DB_OUTPUT_QUEUE = A3DB_OUTPUT_QUEUE - [_x];
-							};
-							true
-						} count +A3DB_OUTPUT_QUEUE;
-						true
-					} count A3DB_DELETE_QUEUE;
-					A3DB_DELETE_QUEUE = [];
-				};
-			};
-			A3DB_LOOP_COUNT = 0;
-		};
+    private _parseResult = {
+        params [
+            ["_data", [], [[]]]
+        ];
 
-		if !((count A3DB_INPUT_QUEUE) isEqualTo 0) then {
+        if (_data isEqualTo []) exitWith {};
+        _data = parseSimpleArray (_data select 0);
+
+        if !(_data isEqualTo []) then {
+            {
+                _buffer = _buffer + (_x select 2);
+
+                private _currentIndex = _x select 1;
+                if (_currentIndex isEqualTo 0 || {_currentIndex isEqualTo -1}) then {
+                    A3DB_NS setVariable [str (_x select 0), _buffer];
+                    _buffer = "";
+                };
+                true
+            } count _data;
+        };
+    };
+
+    while {true} do {
+
+        if !((count A3DB_INPUT_QUEUE) isEqualTo 0) then {
 
 			private _data = [];
 
@@ -53,31 +57,15 @@
 
 			};
 
-			private _result = "A3DB" callExtension ["INPUT",_data];
+            private _result = "A3DB" callExtension ["INPUT",_data];
+			[_result] call _parseResult;
 
-			_result = parseSimpleArray (_result select 0);
+        } else {
 
-			if !(_result isEqualTo []) then {
-				{
-					A3DB_OUTPUT_QUEUE pushBack _x;
-					true
-				} count _result;
-			};
+            private _result = "A3DB" callExtension ["CHECK",[]];
+            [_result] call _parseResult;
 
-		} else {
-			private _result = "A3DB" callExtension ["CHECK",[]];
-
-			_result = parseSimpleArray (_result select 0);
-
-			if !(_result isEqualTo []) then {
-				{
-					A3DB_OUTPUT_QUEUE pushBack _x;
-					true
-				} count _result;
-			};
-
-			//sleep (A3DB_BASE_FRAMETICK/diag_fps);
-		};
-		A3DB_LOOP_COUNT = A3DB_LOOP_COUNT + 1;
-	};
+            sleep (A3DB_BASE_FRAMETICK/diag_fps);
+        };
+    };
 };
