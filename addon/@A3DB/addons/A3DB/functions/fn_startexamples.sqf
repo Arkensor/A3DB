@@ -8,21 +8,23 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-arr = [];
-for "_i" from 0 to 99 do {
-    [] spawn {
-        _test = [10,10,1] call A3DB_fnc_query;
-        arr pushBack _test;
-    };
-};
 [] spawn {
-    _time = diag_tickTime;
-    waitUntil {count arr > 99};
-    diag_log format["FINISHED IN %1", diag_tickTime - _time];
-    {
-        diag_log _x;
-        true;
-    } count arr;
+
+    sleep 10;
+
+    arr = [];
+    for "_i" from 0 to 999 do {
+        [] spawn {
+            _test = [10,10,1] call A3DB_fnc_query;
+            arr pushBack _test;
+        };
+    };
+
+    [] spawn {
+        _time = diag_tickTime;
+        waitUntil {count arr > 999};
+        diag_log format["FINISHED IN %1", diag_tickTime - _time];
+    };
 };
 
 /*
