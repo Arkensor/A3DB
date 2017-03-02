@@ -46,7 +46,11 @@ src/A3DB\.sdf
 
 src/Release/
 
+src/A3DB/Release/
+
 src/Debug/
+
+src/A3DB/Debug/
 
 src/x64/
 

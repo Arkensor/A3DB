@@ -17,7 +17,7 @@ private _stringTicket = str _ticketID;
 
 waitUntil {!isNil {A3DB_NS getVariable _stringTicket}};
 
-_result = A3DB_NS getVariable _stringTicket;
+private _result = A3DB_NS getVariable _stringTicket;
 
 A3DB_NS setVariable [_stringTicket, nil];
 

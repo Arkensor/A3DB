@@ -16,8 +16,6 @@
     //Create NS
     A3DB_NS = createLocation ["Hill", [-1000, -1000, 0], 0, 0];
 
-    private _buffer = "";
-
     private _parseResult = {
         params [
             ["_data", [], [[]]]
@@ -27,6 +25,9 @@
         _data = parseSimpleArray (_data select 0);
 
         if !(_data isEqualTo []) then {
+
+            private _buffer = "";
+
             {
                 _buffer = _buffer + (_x select 2);
 
@@ -35,7 +36,7 @@
                     A3DB_NS setVariable [str (_x select 0), _buffer];
                     _buffer = "";
                 };
-                true
+                true;
             } count _data;
         };
     };
@@ -50,11 +51,10 @@
 
 				{
 					_data pushBack _x;
-					true
+					true;
 				} count A3DB_INPUT_QUEUE;
 
 				A3DB_INPUT_QUEUE = [];
-
 			};
 
             private _result = "A3DB" callExtension ["INPUT",_data];

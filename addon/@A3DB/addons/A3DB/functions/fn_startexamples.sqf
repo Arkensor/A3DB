@@ -8,30 +8,22 @@
 	a cross database extension for Arma 3 by Arkensor
 */
 
-/*
-_result = "A3DB" callExtension ["fnc1", [1,"two",true,[4,"five",false]]];
-diag_log _result;
-//diag_log parseSimpleArray (_result select 0);
-*/
-
-[] spawn {
-
-	for "_i" from 0 to 20 do{
-
-		[["playerSelectGear",["playerid", "side", "whatever"]], "MYSQL_SELECT", true] spawn A3DB_fnc_query;
-
-	};
-
+arr = [];
+for "_i" from 0 to 99 do {
+    [] spawn {
+        _test = [10,10,1] call A3DB_fnc_query;
+        arr pushBack _test;
+    };
 };
-
-/*
-"A3DB" callExtension [
-	"RAW",[
-		"SELECT * from players where playerID = 742323423423",
-		"SELECT * from players2 where playerID = 523525"
-	]
-];
-*/
+[] spawn {
+    _time = diag_tickTime;
+    waitUntil {count arr > 99};
+    diag_log format["FINISHED IN %1", diag_tickTime - _time];
+    {
+        diag_log _x;
+        true;
+    } count arr;
+};
 
 /*
 

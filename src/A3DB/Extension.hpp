@@ -27,6 +27,7 @@
 
 #include "Workload.hpp"
 #include "Result.hpp"
+#include "TypeDefines.hpp"
 
 template<class T, class U>
 class Processor;
@@ -64,5 +65,6 @@ private:
 	bool checkResults(std::vector<Result>& results, int current_size);
 	std::string result_to_string(Result res);
 	std::vector<Result> worker(Workload request);
+	std::vector<Result> splitIntoMultipart(std::string res, Workload request);
 };
 #endif

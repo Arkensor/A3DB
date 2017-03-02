@@ -36,7 +36,7 @@ class CfgFunctions
 			class dequeue {headerType = -1;};
 			class query {headerType = -1;};
 
-			//class startexamples {postInit = 1; headerType = -1;};
+			class startexamples {postInit = 1; headerType = -1;};
 		};
 	};
 };

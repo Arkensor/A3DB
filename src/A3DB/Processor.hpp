@@ -76,6 +76,13 @@ public:
 
 private:
 
+	bool started = false;
+
+	Extension *extensionPtr;
+
+	SafeQueue<U> result_q;
+	SafeQueue<T> request_q;
+
 	void run(std::function<std::vector<U>(T)> f)
 	{
 		while (!extensionPtr->shutDown && extensionPtr->allGood)
@@ -88,12 +95,5 @@ private:
 			}
 		}
 	}
-
-	bool started = false;
-
-	Extension *extensionPtr;
-
-	SafeQueue<U> result_q;
-	SafeQueue<T> request_q;
 };
 #endif

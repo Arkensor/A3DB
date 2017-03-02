@@ -7,7 +7,6 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
-//if (!canSuspend) exitWith {diag_log "Wrong context"};
 params [
 	["_data", "", ["", 0]],
 	["_type", "", ["", 0]],
