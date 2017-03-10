@@ -13,7 +13,6 @@
 #include "Extension.hpp"
 #include "Processor.hpp"
 
-
 Extension::Extension(std::string _name, std::string _version) : Name(_name), Version(_version) {
 
 #ifdef CONSOLE_DEBUG
