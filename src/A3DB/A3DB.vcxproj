@@ -150,6 +150,7 @@
     <ClInclude Include="Extension.hpp" />
     <ClInclude Include="Processor.hpp" />
     <ClInclude Include="Result.hpp" />
+    <ClInclude Include="ResultBase.hpp" />
     <ClInclude Include="SafeQueue.hpp" />
     <ClInclude Include="TypeDefines.hpp" />
     <ClInclude Include="Workload.hpp" />

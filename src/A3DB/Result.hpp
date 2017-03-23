@@ -12,14 +12,13 @@
 #define __RESULT_H_
 
 #include <string>
+#include "ResultBase.hpp"
 
-class Result {
+class Result : public ResultBase
+{
 public:
-	std::string id;
-	int id_length;
-	std::string ResultData;
 	bool IsMultiPart = false;
 	int PartIndex;
-	Result(std::string _id, int _id_len, std::string result, bool multipart = false, int index = 0) : id(_id), id_length(_id_len), ResultData(result), IsMultiPart(multipart), PartIndex(index) {}
+	Result(std::string _id, std::string result, bool multipart = false, int index = 0) : IsMultiPart(multipart), PartIndex(index), ResultBase(_id, result) {}
 };
 #endif

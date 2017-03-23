@@ -197,7 +197,7 @@ std::string Extension::result_to_string(Result res)
 	ret += res.IsMultiPart ? std::to_string(res.PartIndex) : "-1";
 	ret += ",";
 	ret += "\"";
-	ret += res.ResultData;
+	ret += res.data;
 	ret += "\"";
 	ret += "]";
 	return ret;
@@ -216,14 +216,14 @@ std::vector<Result> Extension::splitIntoMultipart(std::string res, Workload requ
 	//Build Results as long as our data output is longer than one Result
 	while ((unsigned int)res.length() > max_scaled_size)
 	{
-		Result r(request.id, request.id_length, res.substr(0, max_scaled_size), true, i);
+		Result r(request.id, res.substr(0, max_scaled_size), true, i);
 		results.push_back(r);
 		res = res.substr(max_scaled_size);
 		i--;
 	}
 
 	//Put in final Result, or the only one in case it was small enough for one anyway
-	Result r(request.id, request.id_length, res, multi_part, multi_part ? 0 : -1);
+	Result r(request.id, res, multi_part, multi_part ? 0 : -1);
 	results.push_back(r);
 
 	return results;

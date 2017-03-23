@@ -41,5 +41,8 @@
     <ClInclude Include="TypeDefines.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ResultBase.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

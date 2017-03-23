@@ -16,14 +16,17 @@
 #include "SafeQueue.hpp"
 #include "Extension.hpp"
 
-template <class T, class U>
+template <class TRequest, class TResult>
 class Processor
 {
 public:
 
-	Processor(Extension *p) : extensionPtr(p) {}
+	Processor(Extension *p) : extensionPtr(p)
+	{
+		static_assert(std::is_base_of<ResultBase, TResult>::value, "TResult must derive from ResultBase");
+	}
 
-	void start(std::function<std::vector<U>(T)> f, int c)
+	void start(std::function<std::vector<TResult>(TRequest)> f, int c)
 	{
 		if (started) return;
 
@@ -49,17 +52,17 @@ public:
 		#endif
 	}
 
-	void add(T r)
+	void add(TRequest r)
 	{
 		request_q.enqueue(r);
 	}
 
-	bool try_get_result(U& r)
+	bool try_get_result(TResult& r)
 	{
 		return result_q.try_pop_result(r);
 	}
 
-	bool try_get_results(std::vector<U>& r, unsigned int current_size, unsigned int max_size)
+	bool try_get_results(std::vector<TResult>& r, unsigned int current_size, unsigned int max_size)
 	{
 		return result_q.try_pop_results(r, current_size, max_size);
 	}
@@ -80,16 +83,16 @@ private:
 
 	Extension *extensionPtr;
 
-	SafeQueue<U> result_q;
-	SafeQueue<T> request_q;
+	SafeQueue<TResult> result_q;
+	SafeQueue<TRequest> request_q;
 
-	void run(std::function<std::vector<U>(T)> f)
+	void run(std::function<std::vector<TResult>(TRequest)> f)
 	{
 		while (!extensionPtr->shutDown && extensionPtr->allGood)
 		{
-			T arg = request_q.dequeue();
-			std::vector<U> results = f(arg);
-			for (U result : results)
+			TRequest arg = request_q.dequeue();
+			std::vector<TResult> results = f(arg);
+			for (TResult result : results)
 			{
 				result_q.enqueue(result);
 			}
