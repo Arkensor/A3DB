@@ -7,14 +7,15 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
-[] spawn {
 
-    A3DB_INPUT_QUEUE = [];
-    A3DB_TICKET_ID = 0;
-    A3DB_BASE_FRAMETICK = 5;
+[] spawn {
 
     //Create NS
     A3DB_NS = createLocation ["Hill", [-1000, -1000, 0], 0, 0];
+
+    A3DB_NS setVariable ["A3DB_BASE_FRAMETICK", 5];
+    A3DB_NS setVariable ["TICKET_ID", 0];
+    A3DB_NS setVariable ["A3DB_INPUT_QUEUE", []];
 
     private _buffer = "";
 
@@ -42,17 +43,19 @@
 
     while {true} do {
 
-        if !((count A3DB_INPUT_QUEUE) isEqualTo 0) then {
+        if !((count (A3DB_NS getVariable ["A3DB_INPUT_QUEUE", []])) isEqualTo 0) then {
 
 			private _data = [];
 
 			isNil {
-                
+
 				{
 					_data pushBack _x;
-                    A3DB_INPUT_QUEUE deleteAt 0;
+					private _arr = (A3DB_NS getVariable ["A3DB_INPUT_QUEUE", []]);
+					_arr deleteAt 0;
+                    A3DB_NS setVariable ["A3DB_INPUT_QUEUE", _arr];
                     if (_forEachIndex isEqualTo 1023) exitWith {};
-				} forEach +A3DB_INPUT_QUEUE;
+				} forEach +(A3DB_NS getVariable ["A3DB_INPUT_QUEUE", []]);
 
 			};
 
@@ -64,7 +67,7 @@
             private _result = "A3DB" callExtension ["CHECK",[]];
             [_result] call _parseResult;
 
-            sleep (A3DB_BASE_FRAMETICK/diag_fps);
+            sleep ((A3DB_NS getVariable ["A3DB_BASE_FRAMETICK", 5])/diag_fps);
         };
     };
 };

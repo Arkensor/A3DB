@@ -26,24 +26,3 @@
         diag_log format["FINISHED IN %1", diag_tickTime - _time];
     };
 };
-
-/*
-
-	private["_start", "_stop", "_result"];
-
-	_start = diag_tickTime;
-	_result = "A3DB" callExtension ["testcall",["par1", "par88", 1337]];
-	_stop = diag_tickTime;
-	diag_log format["Single -- Result: %1 - took %2ms", _result, (_stop - _start)];
-
-	[] spawn {
-		_start = diag_tickTime;
-		_result = "";
-			for "_i" from 1 to 10000 do {
-				_result = "A3DB" callExtension ["testcall",["par1", "par88", 1337]];
-			};
-
-		_stop = diag_tickTime;
-		diag_log format["10000 runs -- Result: %1 - took %2ms (%2 / 10000 = %3)", _result, (_stop - _start), ((_stop - _start) / 10000)];
-	};
-*/

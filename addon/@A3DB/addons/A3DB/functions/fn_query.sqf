@@ -7,6 +7,7 @@
 
 	a cross database extension for Arma 3 by Arkensor
 */
+
 params [
 	["_data", "", ["", 0]],
 	["_type", "", ["", 0]],
