@@ -15,7 +15,7 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"A3_Functions_F"};
+		requiredAddons[] = {""};
 		fileName = "A3DB.pbo";
 		author = "Arkensor";
 	};

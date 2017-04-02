@@ -15,7 +15,7 @@
 
 Extension::Extension(std::string _name, std::string _version) : Name(_name), Version(_version) {
 
-#ifdef CONSOLE_DEBUG
+	#ifdef CONSOLE_DEBUG
 	AllocConsole();
 	SetConsoleTitle(TEXT("Console output"));
 	FILE *stream;
@@ -24,7 +24,7 @@ Extension::Extension(std::string _name, std::string _version) : Name(_name), Ver
 	auto console_logger = spdlog::stdout_logger_mt("Console");
 	console.swap(console_logger);
 	console->info("{0} version {1} initialized ...", Name, Version);
-#endif
+	#endif
 }
 
 Extension::~Extension() {
@@ -34,9 +34,9 @@ Extension::~Extension() {
 
 	shutDown = true;
 
-#ifdef CONSOLE_DEBUG
+	#ifdef CONSOLE_DEBUG
 	console->info("{0} shutting down ...", Name);
-#endif
+	#endif
 }
 
 void Extension::setup(int outputSize) {
@@ -55,14 +55,8 @@ void Extension::setup(int outputSize) {
 
 std::vector<Result> Extension::worker(Workload request)
 {
-	
 	std::string res;
 
-	//proof of concept, adds 1's to a string equal to the input int count (e.g 5000 1's)
-	//int size = stoi(request.WorkloadData);
-	//for (int i = 0; i < size; i++)
-		//res += "1";
-	
 	res = "Dogs are the very cute and lovely";
 
 	return this->splitIntoMultipart(res, request);
