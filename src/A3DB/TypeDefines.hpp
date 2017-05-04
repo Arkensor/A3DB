@@ -5,7 +5,7 @@
 	 / ___ \ ___)  | |_| | |_) |
 	/_/   \_\____/ |____/|____/
 
-	a cross database extension for Arma 3 by Arkensor
+	a cross database extension for Arma 3 by Arkensor and BoGuu
 */
 #define MYSQL_RAW   0
 #define MYSQL_STMT  1 

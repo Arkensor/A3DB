@@ -5,11 +5,14 @@
 	 / ___ \ ___)  | |_| | |_) |
 	/_/   \_\____/ |____/|____/
 
-	a cross database extension for Arma 3 by Arkensor
+	a cross database extension for Arma 3 by Arkensor and BoGuu
 */
 
 #ifndef __EXTENSION_H_
 #define __EXTENSION_H_
+
+//Version
+#define VERSION "1.0"
 
 #include <string>
 #include <vector>
