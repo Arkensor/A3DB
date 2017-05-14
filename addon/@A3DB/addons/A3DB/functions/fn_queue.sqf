@@ -41,7 +41,7 @@
         };
     };
 
-    while {true} do {
+    while {true} do { //while true replace trough "for 0 to 1 step 0" and maybe a loop to check if this loop is active
 
         if !((count (A3DB_NS getVariable ["A3DB_INPUT_QUEUE", []])) isEqualTo 0) then {
 
