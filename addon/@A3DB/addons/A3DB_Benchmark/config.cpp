@@ -4,7 +4,7 @@
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    CREATION DATE:  14.02.2018
+    CREATION DATE:  01.01.2018
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -17,28 +17,25 @@
 
 class CfgPatches
 {
-    class A3DB
+    class A3DB_Benchmark
     {
-        requiredVersion = 1.67;
-        fileName = "A3DB.pbo";
+		requiredVersion = 1.67;
+		requiredAddons[] = { "A3DB" };
+        fileName = "A3DB_Benchmark.pbo";
         author = "Arkensor";
     };
 };
 
 class CfgFunctions
 {
-    class A3DB
+    class A3DB_Benchmark
     {
-        tag = "A3DB";
+        tag = "A3DB_Benchmark";
 
         class Functions 
         {
-            file = "\A3DB\functions";
-
-            class queue { preInit = 1; headerType = -1; };
-            class enqueue { headerType = -1; };
-            class dequeue { headerType = -1; };
-            class request { headerType = -1; };
+            file = "\A3DB_Benchmark\functions";
+			class benchmark { postInit = 1; headerType = -1; };
         };
     };
 };

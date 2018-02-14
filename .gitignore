@@ -58,3 +58,5 @@ addon/@A3DB/addons/A3DB/\.idea/
 
 *.iml
 /src/A3DB/x64
+bin/
+src/.idea/

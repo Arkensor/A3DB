@@ -1,25 +1,36 @@
-/*
-		_	_____  ____  ____
-	   / \  |___ / |  _ \| __ )
-	  / _ \   |_ \ | | | |  _ \
-	 / ___ \ ___)  | |_| | |_) |
-	/_/   \_\____/ |____/|____/
+/**********************************************************************************************************************\
 
-	a cross database extension for Arma 3 by Arkensor
-*/
+    DESCRIPTION: A3DB - Waiting for the data to be returned
 
-params [
-	["_ticketID", -1, [0]]
+------------------------------------------------------------------------------------------------------------------------
+
+    CREATION DATE:  01.01.2018
+
+------------------------------------------------------------------------------------------------------------------------
+
+    Copyright © 2018
+    Paul L. (https://github.com/Arkensor)
+    Ollie W. (https://github.com/BoGuu)
+    All rights reserved!
+
+\**********************************************************************************************************************/
+
+params
+[
+    [ "_ticketID", -1, [ 0 ] ]
 ];
 
-if (_ticketID isEqualTo -1) exitWith {diag_log "A call to a non existing ticket was performed. Check of possible errors and data loss!";};
+if ( _ticketID isEqualTo -1 ) exitWith
+{
+    diag_log "A3DB: A call to a non existing ticket was performed. Check of possible errors and data loss!";
+};
 
 private _stringTicket = str _ticketID;
 
-waitUntil {!isNil {A3DB_NS getVariable _stringTicket}};
+waitUntil { !isNil { A3DB_NS getVariable _stringTicket } };
 
 private _result = A3DB_NS getVariable _stringTicket;
 
-A3DB_NS setVariable [_stringTicket, nil];
+A3DB_NS setVariable [ _stringTicket, nil ];
 
 _result;

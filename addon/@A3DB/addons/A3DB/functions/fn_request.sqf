@@ -1,10 +1,10 @@
 /**********************************************************************************************************************\
 
-    DESCRIPTION: A3DB - A database extension for ArmA 3
+    DESCRIPTION: A3DB - Full request with waiting for the results
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    CREATION DATE:  14.02.2018
+    CREATION DATE:  01.01.2018
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -15,30 +15,15 @@
 
 \**********************************************************************************************************************/
 
-class CfgPatches
+params
+[
+    [ "_data", "", [ "", 0 ] ],
+    [ "_return", 1, [ 0 ] ]
+];
+
+private _ticketID = [ _data, _return ] call A3DB_fnc_enqueue;
+
+if ( ( _return isEqualTo 1 ) && { !( _ticketID isEqualTo -1 ) } ) exitWith
 {
-    class A3DB
-    {
-        requiredVersion = 1.67;
-        fileName = "A3DB.pbo";
-        author = "Arkensor";
-    };
-};
-
-class CfgFunctions
-{
-    class A3DB
-    {
-        tag = "A3DB";
-
-        class Functions 
-        {
-            file = "\A3DB\functions";
-
-            class queue { preInit = 1; headerType = -1; };
-            class enqueue { headerType = -1; };
-            class dequeue { headerType = -1; };
-            class request { headerType = -1; };
-        };
-    };
+    [ _ticketID ] call A3DB_fnc_dequeue;
 };
