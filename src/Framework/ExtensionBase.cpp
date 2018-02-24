@@ -34,54 +34,89 @@ CExtensionBase::CExtensionBase( const std::string & rstrName, const std::string 
     , m_eExtensionState( A3::DataTypes::EExtensionState::e_Initialized )
     , m_strExtensionStateDescription( "" )
     , m_nMaxOutputSize( -1 )
-    , m_strExecutablePath( std::experimental::filesystem::current_path().string() )
 {
+}
+
+CExtensionBase::~CExtensionBase()
+{
+}
+
+void CExtensionBase::SafeLoad()
+{
+    //ArmA execuatable path
+    m_strExecutablePath = std::experimental::filesystem::current_path().string();
+
     //Parse ArmA process parameter
     auto poParameterHandler = std::make_shared< A3::Extension::StartParameter::CStartParameterHandler >();
 
     m_poStartParameterHandler.swap( poParameterHandler );
 
     //Setup mutlithreaded processing
-    auto oProcessor = std::make_shared< A3::Extension::Processor::CProcessor >();
+    auto nAvailableThreads = ( A3::DataTypes::int8 ) std::thread::hardware_concurrency();
+
+#ifdef _EXTENSION_MAX_THREADS
+    auto nConfiguredThreads = _EXTENSION_MAX_THREADS;
+#else
+    auto nConfiguredThreads = -1;
+#endif
+
+    if ( ( nConfiguredThreads == -1 ) || ( nConfiguredThreads > nAvailableThreads ) )
+    {
+        nConfiguredThreads = nAvailableThreads;
+    }
+
+    auto oProcessor = std::make_shared< A3::Extension::Processor::CProcessor >( nConfiguredThreads );
 
     m_poProcessor.swap( oProcessor );
 
 #ifdef _EXTENSION_USE_CONSOLE_LOGGING
-    AllocConsole();
-
-    //Set console title
-    std::string strConsoleTitle = m_strName + " " + m_strVersion;
-
-    SetConsoleTitle( TEXT( strConsoleTitle.c_str() ) );
-
-    //Disable key combinations
-    SetConsoleCtrlHandler( nullptr, true );
-
-    //Disable closing button
-    HWND oConsoleModule = ::GetConsoleWindow();
-
-    if ( oConsoleModule )
+    if( !GetConsoleWindow() )
     {
-        HMENU oMenuModule = ::GetSystemMenu( oConsoleModule, FALSE );
-
-        if ( oMenuModule )
+        try
         {
-            DeleteMenu( oMenuModule, SC_CLOSE, MF_BYCOMMAND );
+            AllocConsole();
+
+            //Set console title
+            std::string strConsoleTitle = m_strName + " " + m_strVersion;
+
+            SetConsoleTitle( TEXT( strConsoleTitle.c_str() ) );
+
+            //Disable key combinations
+            SetConsoleCtrlHandler( nullptr, true );
+
+            //Disable closing button
+            HWND oConsoleModule = ::GetConsoleWindow();
+
+            if ( oConsoleModule )
+            {
+                HMENU oMenuModule = ::GetSystemMenu( oConsoleModule, FALSE );
+
+                if ( oMenuModule )
+                {
+                    DeleteMenu( oMenuModule, SC_CLOSE, MF_BYCOMMAND );
+                }
+            }
+
+            freopen_s( &m_oStream, "CONOUT$", "w", stdout );
+        }
+        catch ( ... )
+        {
+            throw std::runtime_error( "Could not allocate console." );
         }
     }
 
-    freopen_s( &m_oStream, "CONOUT$", "w", stdout );
+    if( GetConsoleWindow() )
+    {
+        auto oConsoleLogger = spdlog::stdout_color_mt( "console" );
 
-    auto oConsoleLogger = spdlog::stdout_color_mt( "console" );
+        m_poConsoleLogger.swap( oConsoleLogger );
 
-    m_poConsoleLogger.swap( oConsoleLogger );
+        m_poConsoleLogger->set_level( loglevel::trace );
 
-    m_poConsoleLogger->set_level( loglevel::trace );
+        m_poConsoleLogger->flush_on( loglevel::trace );
 
-    m_poConsoleLogger->flush_on( loglevel::trace );
-
-    m_poConsoleLogger->set_pattern( "[%Y-%m-%d %H:%M:%S] %v" );
-
+        m_poConsoleLogger->set_pattern( "[%Y-%m-%d %H:%M:%S] %v" );
+    };
 #endif
 
 #ifdef _EXTENSION_USE_DEFAULT_FILE_LOGGER
@@ -154,10 +189,6 @@ CExtensionBase::CExtensionBase( const std::string & rstrName, const std::string 
 #endif
 }
 
-CExtensionBase::~CExtensionBase()
-{
-}
-
 std::string
 CExtensionBase::GetDateTime( std::string strFormat )
 {
@@ -173,32 +204,54 @@ CExtensionBase::GetDateTime( std::string strFormat )
     return std::string( buffer );
 }
 
+void
+CExtensionBase::AsyncExtensionLoad()
+{
+    m_eExtensionState = A3::DataTypes::EExtensionState::e_Loading;
+
+    std::thread oAsyncSetupThread( [=] {
+        try
+        {
+            Setup();
+            m_poProcessor->Start( std::bind( &A3::Extension::CExtensionBase::Worker, this, std::placeholders::_1 ) );
+            m_eExtensionState = A3::DataTypes::EExtensionState::e_Started;
+        }
+        catch ( std::exception & oException )
+        {
+            m_eExtensionState = A3::DataTypes::EExtensionState::e_ShutDown;
+            m_strExtensionStateDescription = oException.what();
+        }
+        catch ( ... )
+        {
+            m_eExtensionState = A3::DataTypes::EExtensionState::e_ShutDown;
+            m_strExtensionStateDescription = "An unknown exception has occurred.";
+        }
+    } );
+
+    oAsyncSetupThread.detach();
+}
+
 int
 CExtensionBase::call( char * pstrOutput, int nOutputSize, const char *pstrFunction, const char **pArguments, int nArguments )
 {
     --nOutputSize;
 
+    //Set the outputsize for ArmA
     if( m_nMaxOutputSize == -1 )
     {
         m_nMaxOutputSize = nOutputSize;
     }
 
-    if( !m_poProcessor->m_bActive )
+    //Load the extension
+    if( m_eExtensionState < A3::DataTypes::EExtensionState::e_Loading )
     {
-        #ifdef _EXTENSION_MAX_THREADS
-            #define _EXTENSION_THREAD_COUNT _EXTENSION_MAX_THREADS
-        #else
-            #define _EXTENSION_THREAD_COUNT -1
-        #endif
-
-        m_poProcessor->start( std::bind( &A3::Extension::CExtensionBase::Worker, this, std::placeholders::_1 ), _EXTENSION_THREAD_COUNT );
-
-        Setup(); //Load custom setup from outside the framework
+        AsyncExtensionLoad();
     }
 
+    //Adding workloads that will be processed as soon as the setup is done
     if( nArguments )
     {
-        AddWorkloads(pstrFunction, pArguments, nArguments);
+        AddWorkloads( pstrFunction, pArguments, nArguments );
     }
 
     //Opening and closing brackets.
@@ -209,7 +262,7 @@ CExtensionBase::call( char * pstrOutput, int nOutputSize, const char *pstrFuncti
     std::vector< A3::Extension::Processor::CProcessorResult > results;
 
     //Check for results and append them
-    if (this->CheckResults(results, nCurrentSize) )
+    if ( CheckResults( results, nCurrentSize ) )
     {
         for ( auto oResult : results )
         {
@@ -229,7 +282,22 @@ CExtensionBase::call( char * pstrOutput, int nOutputSize, const char *pstrFuncti
 std::vector< A3::Extension::Processor::CProcessorResult >
 CExtensionBase::Worker( A3::Extension::Processor::CProcessorWorkload oWorkload )
 {
-    return SplitResult(Execute(oWorkload), oWorkload);
+    try
+    {
+        return SplitResult( Execute( oWorkload ), oWorkload );
+    }
+    catch ( std::exception & oException )
+    {
+        m_eExtensionState = A3::DataTypes::EExtensionState::e_ShutDown;
+        m_strExtensionStateDescription = oException.what();
+    }
+    catch ( ... )
+    {
+        m_eExtensionState = A3::DataTypes::EExtensionState::e_ShutDown;
+        m_strExtensionStateDescription = "An unknown exception has occurred.";
+    }
+
+    return std::vector< A3::Extension::Processor::CProcessorResult >();
 }
 
 void

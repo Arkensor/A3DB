@@ -35,6 +35,21 @@ static void __attribute__( ( constructor ) ) extension_init( void )
             case DLL_PROCESS_ATTACH:
 #endif
                 g_Extension = new A3::Extension::CExtensionBase( _EXTENSION_NAME, _EXTENSION_VERSION);
+
+                try
+                {
+                    g_Extension->SafeLoad();
+                }
+                catch ( std::exception & oException )
+                {
+                    g_Extension->m_eExtensionState = A3::DataTypes::EExtensionState::e_ShutDown;
+                    g_Extension->m_strExtensionStateDescription = oException.what();
+                }
+                catch ( ... )
+                {
+                    g_Extension->m_eExtensionState = A3::DataTypes::EExtensionState::e_ShutDown;
+                    g_Extension->m_strExtensionStateDescription = "An unknown exception has occurred.";
+                }
 #ifdef _WINDOWS
                 break;
 

@@ -21,6 +21,8 @@
 #include "ProcessorWorkload.hpp"
 #include "ProcessorResult.hpp"
 
+#include <atomic>
+
 namespace A3
 {
 namespace Extension
@@ -28,15 +30,14 @@ namespace Extension
 namespace Processor
 {
 
-class CProcessor
+class CProcessor //Todo not yet exception safe, maybe merge the processor from a standalone class into the extension base
 {
 public:
-    CProcessor();
+    CProcessor( A3::DataTypes::int8 nThreads );
     virtual ~CProcessor();
 
     void
-    start( std::function< std::vector< CProcessorResult >( CProcessorWorkload ) > oFunction ,
-           A3::DataTypes::int8 nThreads );
+    Start( std::function< std::vector< CProcessorResult >( CProcessorWorkload ) > oTreadFunction );
 
     void
     Add( CProcessorWorkload & roWorkload );
@@ -47,7 +48,8 @@ public:
                      A3::DataTypes::int64 nMaxSize );
 
 public:
-    bool m_bActive;
+    std::atomic_bool m_bActive;
+    const A3::DataTypes::int8 m_nProcessorThreads;
 
 protected:
     CProcessorQueue< CProcessorResult > oResultQueue;

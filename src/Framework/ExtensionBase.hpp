@@ -55,6 +55,9 @@ public:
     CExtensionBase( const std::string & rstrName, const std::string & rstrVersion );
     virtual ~CExtensionBase();
 
+    void
+    SafeLoad();
+
     int
     call( char * pstrOutput, int nOutputSize, const char *pstrFunction, const char **pArguments, int nArguments );
 
@@ -92,6 +95,9 @@ protected:
 
     std::string
     Execute( A3::Extension::Processor::CProcessorWorkload oWorkload );
+
+    void
+    AsyncExtensionLoad();
 
     std::string
     GetDateTime( std::string strFormat );

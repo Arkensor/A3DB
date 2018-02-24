@@ -81,6 +81,7 @@ namespace DataTypes
 enum EExtensionState : int8
 {
     e_Initialized,
+    e_Loading,
     e_Started,
     e_ShutDown,
 };

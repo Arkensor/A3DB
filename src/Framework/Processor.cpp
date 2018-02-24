@@ -17,8 +17,6 @@
 
 #include "Processor.hpp"
 
-#include <iostream>
-
 namespace A3
 {
 namespace Extension
@@ -26,8 +24,9 @@ namespace Extension
 namespace Processor
 {
 
-CProcessor::CProcessor()
+CProcessor::CProcessor( A3::DataTypes::int8 nThreads )
     : m_bActive( false )
+    , m_nProcessorThreads( nThreads )
 {
 }
 
@@ -36,8 +35,7 @@ CProcessor::~CProcessor()
 }
 
 void
-CProcessor::start( std::function< std::vector< CProcessorResult >( CProcessorWorkload ) > oFunction ,
-                   A3::DataTypes::int8 nThreads )
+CProcessor::Start( std::function< std::vector< CProcessorResult >( CProcessorWorkload ) > oTreadFunction )
 {
     if ( m_bActive )
     {
@@ -46,17 +44,9 @@ CProcessor::start( std::function< std::vector< CProcessorResult >( CProcessorWor
 
     m_bActive = true;
 
-    auto nAvailableThreads = ( A3::DataTypes::int8 ) std::thread::hardware_concurrency();
-
-    if ( ( nThreads == -1 ) || ( nThreads > nAvailableThreads ) )
+    for ( int nThread = 0; nThread < m_nProcessorThreads; ++nThread )
     {
-        nThreads = nAvailableThreads;
-    }
-
-
-    for ( int nThread = 0; nThread < nThreads; ++nThread )
-    {
-        std::thread oThread( [=] { run( oFunction ); } );
+        std::thread oThread( [=] { run( oTreadFunction ); } );
 
         oThread.detach();
     }
@@ -69,7 +59,7 @@ CProcessor::Add( CProcessorWorkload & roWorkload )
 }
 
 bool
-CProcessor::try_get_results( std::vector<CProcessorResult> & oWorkload,
+CProcessor::try_get_results( std::vector< CProcessorResult > & oWorkload,
                              A3::DataTypes::uint64 nCurrentSize,
                              A3::DataTypes::int64 nMaxSize )
 {
