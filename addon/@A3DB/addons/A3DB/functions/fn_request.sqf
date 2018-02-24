@@ -1,6 +1,6 @@
 /**********************************************************************************************************************\
 
-    DESCRIPTION: A3DB - Full request with waiting for the results
+    DESCRIPTION: Full request with waiting for the results
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -20,6 +20,12 @@ params
     [ "_data", "", [ "", 0 ] ],
     [ "_return", 1, [ 0 ] ]
 ];
+
+if( !canSuspend ) exitWith
+{
+    diag_log "Suspension is required";
+    [ "Suspension is required" ];
+};
 
 private _ticketID = [ _data, _return ] call A3DB_fnc_enqueue;
 

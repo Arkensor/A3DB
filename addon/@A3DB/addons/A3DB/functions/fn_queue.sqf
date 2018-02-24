@@ -24,7 +24,7 @@
 
     A3DB_NS = createLocation [ "Hill", [ -1000, -1000, 0 ], 0, 0 ];
 
-    A3DB_NS setVariable [ "BASE_FRAMETICK", 5 ];
+    A3DB_NS setVariable [ "BASE_FRAMETICK", 20 ];
     A3DB_NS setVariable [ "TICKET_ID", 0 ];
     A3DB_NS setVariable [ "INPUT_QUEUE", [] ];
     A3DB_NS setVariable [ "RESULTS_EXPECTED", 0 ];
@@ -69,7 +69,7 @@
                 {
                     A3DB_NS setVariable [ str( _x param [ 0 ] ), _buffer ];
 
-                    private _results_exptected = A3DB_NS getVariable [ "RESULTS_EXPECTED", 0 ];
+                    private _results_exptected = ( A3DB_NS getVariable [ "RESULTS_EXPECTED", 0 ] ) - 1;
 
                     if( _results_exptected < 0 ) then
                     {

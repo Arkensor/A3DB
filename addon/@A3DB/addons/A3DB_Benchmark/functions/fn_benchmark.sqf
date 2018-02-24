@@ -22,7 +22,7 @@ diag_log "A3DB: Benchmark starting in 5 seconds ...";
 uiSleep 5;
 
 g_nCallingThreads = 1;//254; //Simulating n requests from different sources like remoteexec on your server which all run in parallel
-g_nCallsEach      = 1;//3;   //How many calls does each of the threads do for the simulation
+g_nCallsEach      = 2;//3;   //How many calls does each of the threads do for the simulation
 
 g_oResults = [];
 
