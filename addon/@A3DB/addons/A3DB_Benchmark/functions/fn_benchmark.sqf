@@ -19,10 +19,10 @@ waitUntil{ !isNil "A3DB_NS" };
 
 diag_log "A3DB: Benchmark starting in 5 seconds ...";
 
-uiSleep 5;
+uiSleep 1;
 
 g_nCallingThreads = 1;//254; //Simulating n requests from different sources like remoteexec on your server which all run in parallel
-g_nCallsEach      = 2;//3;   //How many calls does each of the threads do for the simulation
+g_nCallsEach      = 1;//3;   //How many calls does each of the threads do for the simulation
 
 g_oResults = [];
 
@@ -50,7 +50,7 @@ for "_i" from 1 to g_nCallingThreads do
     {
         for "_i" from 1 to g_nCallsEach do
         {
-            private _result = [ "this is some sample data ...", 1 ] call A3DB_fnc_request;
+            private _result = [ 1, "arma_MySQL_or_MariaDB", "SELECT * FROM wanted" ] call A3DB_fnc_query;
             g_oResults pushBack _result;
         };
     };

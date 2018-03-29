@@ -22,12 +22,12 @@ params
 
 if ( _ticketID isEqualTo -1 ) exitWith
 {
-    diag_log "A3DB: A call to a non existing ticket was performed. Check of possible errors and data loss!";
+    diag_log format[ "A3DB: A call to a non existing ticket was performed. Check of possible errors and data loss! -> TicketID: %1", _ticketID ];
 };
 
 private _stringTicket = str _ticketID;
 
-waitUntil { !isNil { A3DB_NS getVariable _stringTicket } };
+waitUntil { !isNil{ A3DB_NS getVariable _stringTicket } };
 
 private _result = A3DB_NS getVariable _stringTicket;
 

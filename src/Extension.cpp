@@ -174,48 +174,86 @@ CExtensionBase::Setup()
 std::string
 CExtensionBase::Execute( A3::Extension::Processor::CProcessorWorkload oWorkload )
 {
-    int nCount;
+    std::string strResult;
+    try
+    {
+        if( oWorkload.m_oArguments.size() > 1 )
+        {
+            std::string strConnection = oWorkload.m_oArguments[ 0 ];
+            std::transform( strConnection.begin(), strConnection.end(), strConnection.begin(),::tolower );
 
-    soci::session sql( *g_poConnectionPool->at( "arma_mysql_or_mariadb" ) );
+            if( g_poConnectionPool->count( strConnection ) > 0 )
+            {
+                soci::session sql( *g_poConnectionPool->at( strConnection ) );
 
-    sql << "select count(*) from test", soci::into( nCount );
+                soci::row oRow;
 
-    std::cout << "We have " << nCount << " entries in the test table." << std::endl;;
+                sql << oWorkload.m_oArguments[ 1 ], soci::into( oRow );
 
-    soci::session sql3( *g_poConnectionPool->at( "arma_postgresql" ) );
+                strResult = "[";
 
-    sql3 << "select count(*) from test", soci::into( nCount );
+                for( std::size_t nElement = 0; nElement != oRow.size(); ++nElement )
+                {
+                    //strResult += "[";
 
-    std::cout << "We have " << nCount << " entries in the test table." << std::endl;;
+                    const soci::column_properties & oProperties = oRow.get_properties( nElement );
 
-    soci::session sql2( *g_poConnectionPool->at( "arma_sqlite" ) );
+                    switch( oProperties.get_data_type() )
+                    {
+                        case soci::dt_string:
+                            strResult += "\"\"" + oRow.get< std::string >( nElement ) + "\"\"" + ",";
+                            break;
+                        case soci::dt_double:
+                            strResult += std::to_string( oRow.get< double >( nElement) ) + ",";
+                            break;
+                        case soci::dt_integer:
+                            strResult += std::to_string( oRow.get< int >( nElement) ) + ",";
+                            break;
+                        case soci::dt_long_long:
+                            strResult += std::to_string( oRow.get< long long >( nElement) ) + ",";
+                            break;
+                        case soci::dt_unsigned_long_long:
+                            strResult += std::to_string( oRow.get< unsigned long long >( nElement) ) + ",";
+                            break;
+                        case soci::dt_date:
+                            std::tm oTime = oRow.get< std::tm >( nElement );
+                            strResult += "\"\"" + std::string( asctime( &oTime ) )+ "\"\"" + ",";
+                            break;
+                        default:
+                            std::runtime_error( fmt::format( "Unknown type for column '{0}'", oProperties.get_name() ) );
+                            break;
+                    }
+                }
 
-    sql2 << "drop table test1";
+                if( oRow.size() > 0 )
+                {
+                    strResult.pop_back();
+                }
 
-    sql2 <<
-         "create table test1 ("
-                 "    id integer,"
-                 "    name varchar(100)"
-                 ")";
+                strResult += "]";
 
-    sql2 << "insert into test1(id, name) values(7, \'John\')";
+                m_poConsoleLogger->info( strResult );
+            }
+            else
+            {
+                throw std::runtime_error( fmt::format( "Could not access connection {0} for query execution", oWorkload.m_oArguments[ 0 ] ) );
+            }
+        }
+        else
+        {
+            throw std::runtime_error( "Required parameters are missing!" );
+        }
+    }
+    catch ( std::exception & oException )
+    {
+        m_poConsoleLogger->error( "Error: {0}", oException.what() );
+    }
+    catch ( ... )
+    {
+        m_poConsoleLogger->error( "An unknown error occurred." );
+    }
 
-    soci::rowid rid(sql2);
-
-    sql2 << "select oid from test1 where id = 7", soci::into(rid);
-
-    int id;
-    std::string name;
-
-    sql2 << "select id, name from test1 where oid = :rid",
-            soci::into(id), soci::into(name), use(rid);
-
-
-    std::cout << "ID: " << id << " - Name: " << name << std::endl;
-
-    sql2 << "drop table test1";
-
-    return "A3EXT rocks!";
+    return strResult;
 }
 
 }; // end namespace Extension

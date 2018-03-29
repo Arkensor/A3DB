@@ -37,9 +37,9 @@
     {
         params
         [
-            ["_data", "[]", [ "" ]],
-            ["_returnCode", -1, [ 0 ]],
-            ["_errorCode", 500, [ 0 ]]
+            [ "_data", "[]", [ "" ] ],
+            [ "_returnCode", -1, [ 0 ] ],
+            [ "_errorCode", 500, [ 0 ] ]
         ];
 
         if ( _debug ) then
@@ -49,6 +49,11 @@
 
         if ( !( _returnCode isEqualTo 0 ) || !( _errorCode isEqualTo 0 ) ) exitWith
         {
+            if( _data isEqualTo "" ) then
+            {
+                _data = "An unknown error has occured";
+            };
+
             diag_log format[ "A3DB: %1", _data ];
 
             A3DB_NS setVariable [ "EXTENSION_FAILURE", true ];
@@ -57,6 +62,8 @@
         if ( _data isEqualTo "[]" ) exitWith {};
 
         _data = parseSimpleArray ( _data );
+
+        diag_log _data;
 
         if ( !( _data isEqualTo [] ) ) then
         {
@@ -86,7 +93,7 @@
         };
     };
 
-    for "_i" from 0 to 1 step 0  do
+    for "_i" from 0 to 1 step 0 do
     {
         if ( A3DB_NS getVariable [ "EXTENSION_FAILURE", false ] ) exitWith
         {
